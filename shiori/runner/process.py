@@ -13,9 +13,14 @@ import time
 from shiori.core.models import DownloadPlan, TabOutcome
 
 
+def run_argv(argv: list[str]) -> int:
+    """Run one command with inherited stdio; return its exit code."""
+    return subprocess.run(argv).returncode
+
+
 def run_plan(plan: DownloadPlan) -> TabOutcome:
     start = time.monotonic()
-    completed = subprocess.run(plan.argv)
+    returncode = run_argv(plan.argv)
     return TabOutcome(
-        plan=plan, returncode=completed.returncode, elapsed=time.monotonic() - start
+        plan=plan, returncode=returncode, elapsed=time.monotonic() - start
     )

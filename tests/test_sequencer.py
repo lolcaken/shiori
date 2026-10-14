@@ -68,6 +68,22 @@ def test_each_tab_is_announced_as_it_starts(capsys):
     assert "videos" in out and "shorts" in out
 
 
+def test_parallel_runner_replaces_the_default_runner():
+    plans = build_plans(make_options(), "Some Channel", Path("/tmp/subs"))
+    calls = []
+
+    def parallel(plan):
+        calls.append(plan)
+        return TabOutcome(plan=plan, returncode=0, elapsed=1.0)
+
+    def boom(plan):
+        raise AssertionError("default runner must not run")
+
+    summary = run_all([plans[0]], runner=boom, fail_fast=False, parallel=parallel)
+    assert [c.tab for c in calls] == [Tab.VIDEOS]
+    assert summary.all_ok is True
+
+
 def test_missing_tab_is_skipped_not_failed(capsys):
     from shiori.core.errors import TabMissingError
 

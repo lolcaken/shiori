@@ -21,6 +21,7 @@ def run_all(
     runner: Callable[[DownloadPlan], TabOutcome] = run_plan,
     fail_fast: bool = False,
     probe: Callable[[DownloadPlan], None] | None = None,
+    parallel: Callable[[DownloadPlan], TabOutcome] | None = None,
 ) -> RunSummary:
     summary = RunSummary()
     for plan in plans:
@@ -35,7 +36,7 @@ def run_all(
                 )
                 continue
         tab_start = time.time()
-        outcome = runner(plan)
+        outcome = parallel(plan) if parallel is not None else runner(plan)
         count, total = downloaded_since(plan.tab_dir, tab_start)
         files = "file" if count == 1 else "files"
         print(f"  downloaded {format_bytes(total)} ({count} {files})", flush=True)

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import shutil
 import subprocess
+from pathlib import Path
 
 from shiori.core.errors import PreflightError
 
@@ -42,3 +43,16 @@ def preflight(yt_dlp: str) -> dict[str, str]:
         "yt-dlp": tool_version(find_binary(yt_dlp), ["--version"]),
         "ffmpeg": tool_version(find_binary("ffmpeg"), ["-version"]),
     }
+
+
+def check_disk_space(path: Path, min_gb: float) -> None:
+    """Refuse to start when the output drive holds less than min_gb free."""
+    anchor = Path(path).expanduser()
+    anchor = anchor if anchor.is_absolute() else Path.cwd() / anchor
+    root = anchor.anchor or Path.cwd().anchor
+    free_gb = shutil.disk_usage(str(root)).free / 1024**3
+    if free_gb < min_gb:
+        raise PreflightError(
+            f"only {free_gb:.1f} GiB free on {root} "
+            f"(need at least {min_gb:g} GiB; see --min-disk-gb)"
+        )

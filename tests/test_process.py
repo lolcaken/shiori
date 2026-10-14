@@ -28,3 +28,10 @@ def test_successful_command_reports_returncode_zero():
 def test_failing_command_reports_its_returncode():
     outcome = run_plan(make_plan([sys.executable, "-c", "import sys; sys.exit(3)"]))
     assert outcome.returncode == 3
+
+
+def test_run_argv_returns_the_exit_code():
+    from shiori.runner.process import run_argv
+
+    assert run_argv([sys.executable, "-c", "pass"]) == 0
+    assert run_argv([sys.executable, "-c", "import sys; sys.exit(3)"]) == 3

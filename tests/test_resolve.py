@@ -61,6 +61,7 @@ def test_tab_probe_argv_lists_without_downloading():
     argv = tab_probe_argv("yt-dlp", "https://www.youtube.com/@X/streams")
     assert "--flat-playlist" in argv
     assert "--skip-download" in argv
+    assert argv[argv.index("--playlist-items") + 1] == "1"  # existence only, not the whole listing
     assert argv[-1] == "https://www.youtube.com/@X/streams"
 
 

@@ -36,6 +36,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="concurrent download fragments per video (default: 8)",
     )
     parser.add_argument(
+        "--workers", type=int, default=3,
+        help="videos to download in parallel per tab (default: 3, 1 is strict sequential)",
+    )
+    parser.add_argument(
         "--cookies", default=None,
         help="Netscape cookie jar for age/bot-gated channels",
     )
@@ -78,5 +82,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--extractor-args", action="append", default=None, metavar="IE:ARGS",
         help='pass ARGS to an extractor, e.g. "youtube:player_client=web_embedded" '
              "(repeatable; YouTube's gates move, so recipes live in the README)",
+    )
+    parser.add_argument(
+        "--min-disk-gb", type=float, default=5.0,
+        help="refuse to start below this free space in GiB (default: 5.0, 0 disables)",
+    )
+    parser.add_argument(
+        "--no-lock", action="store_true",
+        help="allow concurrent runs on the same channel folder (risks archive corruption)",
     )
     return parser

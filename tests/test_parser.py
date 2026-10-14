@@ -11,6 +11,10 @@ def test_defaults_archive_videos_with_english_subs():
     assert ns.sub_langs == "en.*"
     assert ns.output == "archives"
     assert ns.jobs == 8
+    assert ns.workers == 3
+    assert ns.min_disk_gb == 5.0
+    assert ns.no_lock is False
+    assert ns.min_disk_gb == 5.0
     assert ns.throttled_rate == "100K"
     assert ns.http_chunk_size == "10M"
     assert ns.ipv4 is False
@@ -33,6 +37,7 @@ def test_full_option_set_parses():
         "--until", "20241231",
         "--full",
         "-j", "8",
+        "--workers", "5",
         "--cookies", "cookies.txt",
         "--throttled-rate", "50K",
         "--http-chunk-size", "5M",
@@ -48,6 +53,7 @@ def test_full_option_set_parses():
     assert ns.type == "all"
     assert ns.output == "out"
     assert ns.jobs == 8
+    assert ns.workers == 5
     assert ns.throttled_rate == "50K"
     assert ns.http_chunk_size == "5M"
     assert ns.ipv4 is True

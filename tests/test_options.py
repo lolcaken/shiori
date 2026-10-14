@@ -58,6 +58,24 @@ def test_log_file_is_opt_out():
     assert parse(["https://x", "--no-log"]).no_log is True
 
 
+def test_workers_default_to_three_and_reject_zero():
+    assert parse(["https://x"]).workers == 3
+    assert parse(["https://x", "--workers", "1"]).workers == 1
+    with pytest.raises(UsageError):
+        parse(["https://x", "--workers", "0"])
+
+
+def test_disk_threshold_default_and_negative_rejected():
+    assert parse(["https://x"]).min_disk_gb == 5.0
+    with pytest.raises(UsageError):
+        parse(["https://x", "--min-disk-gb", "-1"])
+
+
+def test_lock_is_opt_out():
+    assert parse(["https://x"]).no_lock is False
+    assert parse(["https://x", "--no-lock"]).no_lock is True
+
+
 def test_extractor_args_default_empty_and_repeatable():
     assert parse(["https://x"]).extractor_args == ()
     options = parse([

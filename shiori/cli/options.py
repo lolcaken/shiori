@@ -17,6 +17,10 @@ _TYPE_TO_TABS: dict[str, tuple[Tab, ...]] = {
 def options_from_namespace(ns: argparse.Namespace) -> Options:
     if ns.jobs < 1:
         raise UsageError("--jobs must be at least 1")
+    if ns.workers < 1:
+        raise UsageError("--workers must be at least 1")
+    if ns.min_disk_gb < 0:
+        raise UsageError("--min-disk-gb must not be negative")
     if ns.sleep < 0:
         raise UsageError("--sleep must not be negative")
     try:
@@ -52,4 +56,7 @@ def options_from_namespace(ns: argparse.Namespace) -> Options:
         force_ipv4=ns.ipv4,
         no_log=ns.no_log,
         extractor_args=extractor_args,
+        workers=ns.workers,
+        min_disk_gb=ns.min_disk_gb,
+        no_lock=ns.no_lock,
     )

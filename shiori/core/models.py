@@ -33,6 +33,9 @@ class Options:
     force_ipv4: bool = False
     no_log: bool = False
     extractor_args: tuple[str, ...] = ()
+    workers: int = 3
+    min_disk_gb: float = 5.0
+    no_lock: bool = False
 
 
 @dataclass(frozen=True)

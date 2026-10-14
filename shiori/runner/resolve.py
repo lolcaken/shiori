@@ -51,11 +51,12 @@ def resolve_channel_name(
 
 
 def tab_probe_argv(yt_dlp: str, tab_url: str) -> list[str]:
-    """List a tab's entries without downloading anything."""
+    """Check a tab exists with a single flat-playlist entry — no download."""
     return [
         yt_dlp,
         "--ignore-config",
         "--flat-playlist",
+        "--playlist-items", "1",
         "--print", "%(id)s",
         "--skip-download",
         "--no-warnings",

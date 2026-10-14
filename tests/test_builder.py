@@ -109,3 +109,15 @@ def test_extractor_args_land_in_argv_before_the_url():
 def test_channel_name_is_sanitized_for_the_folder():
     plans = build_plans(make_options(), "Some: Channel?", Path("/tmp/subs"))
     assert plans[0].channel_folder == "Some_ Channel_"
+
+
+def test_worker_argv_swaps_url_for_batch_file_and_shards_archive():
+    from shiori.planner.builder import worker_argv
+
+    plans = build_plans(make_options(), "Some Channel", Path("/tmp/subs"))
+    argv = plans[0].argv
+    worker = worker_argv(argv, Path("/tmp/b0.txt"), Path("/tmp/a0.txt"))
+    assert worker[-2:] == ["--batch-file", str(Path("/tmp/b0.txt"))]
+    assert worker[worker.index("--download-archive") + 1] == str(Path("/tmp/a0.txt"))
+    assert plans[0].url not in worker
+    assert len(worker) == len(argv) + 1  # positional became two flag parts

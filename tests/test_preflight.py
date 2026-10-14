@@ -1,10 +1,11 @@
 """Tests for shiori.runner.preflight — required tools must exist before work starts."""
 import sys
+from pathlib import Path
 
 import pytest
 
 from shiori.core.errors import PreflightError
-from shiori.runner.preflight import find_binary, preflight, tool_version
+from shiori.runner.preflight import check_disk_space, find_binary, preflight, tool_version
 
 
 def test_tool_version_runs_the_binary_and_returns_its_output():
@@ -27,3 +28,13 @@ def test_preflight_confirms_yt_dlp_and_ffmpeg():
     tools = preflight("yt-dlp")
     assert "yt-dlp" in tools["yt-dlp"].lower() or tools["yt-dlp"][0].isdigit()
     assert "ffmpeg" in tools["ffmpeg"].lower()
+
+
+def test_disk_space_check_passes_when_room_exists(tmp_path):
+    check_disk_space(tmp_path, 0)
+    check_disk_space(tmp_path / "not-created-yet", 0)
+
+
+def test_disk_space_check_fails_cleanly_when_full():
+    with pytest.raises(PreflightError):
+        check_disk_space(Path("."), 10**12)

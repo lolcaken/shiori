@@ -63,3 +63,21 @@ def build_plans(
             )
         )
     return plans
+
+
+def worker_argv(
+    plan_argv: list[str], batch_file: Path, shard_archive: Path
+) -> list[str]:
+    """Derive one worker's command from a tab plan's argv.
+
+    The tab URL positional becomes ``--batch-file`` and the archive file
+    becomes the worker's private shard. Every other flag is untouched, so
+    each video is fetched exactly as the single-shot path would fetch it.
+    """
+    argv = list(plan_argv)
+    argv[-1:] = ["--batch-file", str(batch_file)]
+    if "--download-archive" in argv:
+        argv[argv.index("--download-archive") + 1] = str(shard_archive)
+    else:
+        argv += ["--download-archive", str(shard_archive)]
+    return argv
