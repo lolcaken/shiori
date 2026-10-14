@@ -1,9 +1,21 @@
 """Tests for shiori.cli.entrypoint — the pipeline and its exit codes."""
 import os
 
+import pytest
+
 import shiori.cli.entrypoint as entrypoint
 from shiori.core.errors import PreflightError
 from shiori.core.models import RunSummary
+
+
+@pytest.fixture(autouse=True)
+def _real_tools_available(monkeypatch):
+    # These tests exercise the pipeline, not the environment: preflight
+    # always succeeds here unless a test overrides it (see below).
+    monkeypatch.setattr(
+        entrypoint, "preflight",
+        lambda binary: {"yt-dlp": "2026.08.19", "ffmpeg": "ffmpeg version test"},
+    )
 
 
 def bomb_resolve(*args, **kwargs):

@@ -23,5 +23,8 @@ jobs:
       - name: Install ffmpeg (Ubuntu runners lack it; Windows runners have it)
         if: runner.os == 'Linux'
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Install ffmpeg on Windows (not on PATH by default)
+        if: runner.os == 'Windows'
+        run: choco install ffmpeg -y --no-progress
       - name: Run test suite
         run: python -m pytest tests/ -q
