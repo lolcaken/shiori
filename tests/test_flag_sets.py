@@ -37,8 +37,8 @@ def test_resume_flags_skip_the_archive_for_a_full_rebuild():
 
 
 def test_network_flags_carry_jobs_and_sleep():
-    assert flag_sets.network_flags(jobs=4, sleep_interval=2.0) == [
-        "-N", "4", "--sleep-interval", "2.0", "--newline",
+    assert flag_sets.network_flags(jobs=8, sleep_interval=2.0) == [
+        "-N", "8", "--sleep-interval", "2.0", "--newline",
     ]
 
 
@@ -46,6 +46,17 @@ def test_filesystem_flags_keep_filenames_windows_safe_and_bounded():
     flags = flag_sets.filesystem_flags()
     assert "--windows-filenames" in flags
     assert flags[flags.index("--trim-filenames") + 1] == "180"
+
+
+def test_throttle_flags_recover_from_throttling_and_chunk_downloads():
+    flags = flag_sets.throttle_flags("100K", "10M", force_ipv4=False)
+    assert flags[flags.index("--throttled-rate") + 1] == "100K"
+    assert flags[flags.index("--http-chunk-size") + 1] == "10M"
+    assert "--force-ipv4" not in flags
+
+
+def test_throttle_flags_force_ipv4_only_when_asked():
+    assert "--force-ipv4" in flag_sets.throttle_flags("100K", "10M", force_ipv4=True)
 
 
 def test_metadata_flags_embed_metadata_and_cover_art():

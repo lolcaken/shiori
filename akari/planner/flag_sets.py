@@ -42,6 +42,19 @@ def network_flags(jobs: int, sleep_interval: float) -> list[str]:
     return ["-N", str(jobs), "--sleep-interval", str(sleep_interval), "--newline"]
 
 
+def throttle_flags(throttled_rate: str, http_chunk_size: str, force_ipv4: bool) -> list[str]:
+    """Throughput recovery that never touches quality (stream-copy only).
+
+    --throttled-rate re-extracts to fresh URLs when a video crawls;
+    --http-chunk-size issues range requests that sidestep per-connection
+    throttling. Neither changes which bytes are fetched.
+    """
+    flags = ["--throttled-rate", throttled_rate, "--http-chunk-size", http_chunk_size]
+    if force_ipv4:
+        flags.append("--force-ipv4")
+    return flags
+
+
 def filesystem_flags() -> list[str]:
     return ["--trim-filenames", "180", "--windows-filenames"]
 

@@ -38,6 +38,9 @@ def build_plans(
             *flag_sets.format_flags(),
             "-o", str(tab_dir / filename),
             *flag_sets.network_flags(options.jobs, options.sleep_interval),
+            *flag_sets.throttle_flags(
+                options.throttled_rate, options.http_chunk_size, options.force_ipv4
+            ),
             *flag_sets.filesystem_flags(),
             *flag_sets.date_flags(options.since, options.until),
             *(

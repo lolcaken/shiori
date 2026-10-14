@@ -32,8 +32,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="ignore the archive file and re-download everything",
     )
     parser.add_argument(
-        "-j", "--jobs", type=int, default=4,
-        help="concurrent download fragments per video (default: 4)",
+        "-j", "--jobs", type=int, default=8,
+        help="concurrent download fragments per video (default: 8)",
     )
     parser.add_argument(
         "--cookies", default=None,
@@ -61,5 +61,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--verbose", action="store_true",
         help="show raw yt-dlp output instead of organized logging",
+    )
+    parser.add_argument(
+        "--throttled-rate", default="100K",
+        help="re-extract when download rate drops below this (default: 100K, 0 disables)",
+    )
+    parser.add_argument(
+        "--http-chunk-size", default="10M",
+        help="size of chunked HTTP range requests (default: 10M)",
+    )
+    parser.add_argument(
+        "--ipv4", action="store_true",
+        help="force all connections over IPv4",
     )
     return parser

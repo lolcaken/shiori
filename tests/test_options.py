@@ -42,3 +42,17 @@ def test_missing_cookies_file_is_rejected_before_any_download():
 def test_verbose_is_opt_in():
     assert parse(["https://x"]).verbose is False
     assert parse(["https://x", "--verbose"]).verbose is True
+
+
+def test_throttle_options_default_and_override():
+    defaults = parse(["https://x"])
+    assert defaults.throttled_rate == "100K"
+    assert defaults.http_chunk_size == "10M"
+    assert defaults.force_ipv4 is False
+    tuned = parse([
+        "https://x", "--throttled-rate", "0",
+        "--http-chunk-size", "5M", "--ipv4",
+    ])
+    assert tuned.throttled_rate == "0"
+    assert tuned.http_chunk_size == "5M"
+    assert tuned.force_ipv4 is True

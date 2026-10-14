@@ -53,6 +53,9 @@ def test_argv_embeds_subs_into_mp4_and_points_output_at_the_tab_dir():
     assert "--embed-subs" in argv
     assert "--sub-langs en.*" in argv
     assert "--ignore-config" in argv
+    assert "--throttled-rate 100K" in argv
+    assert "--http-chunk-size 10M" in argv
+    assert "--force-ipv4" not in argv
     assert plans[0].url in plans[0].argv  # the tab URL is the positional
     video_templates = [
         plans[0].argv[i + 1] for i, a in enumerate(plans[0].argv[:-1])

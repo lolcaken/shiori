@@ -29,6 +29,9 @@ class Options:
     channel_name: str | None
     sleep_interval: float
     verbose: bool = False
+    throttled_rate: str = "100K"
+    http_chunk_size: str = "10M"
+    force_ipv4: bool = False
 
 
 @dataclass(frozen=True)
