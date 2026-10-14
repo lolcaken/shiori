@@ -35,6 +35,17 @@ def test_empty_run_summary_counts_as_success():
     assert RunSummary().all_ok is True
 
 
+def test_partial_and_skipped_outcomes_do_not_fail_the_run():
+    summary = RunSummary(outcomes=[
+        TabOutcome(plan=None, returncode=1, elapsed=1.0, partial=True),
+        TabOutcome(plan=None, returncode=0, elapsed=1.0, skipped=True),
+    ])
+    assert summary.failed == []
+    assert len(summary.partial) == 1
+    assert len(summary.skipped) == 1
+    assert summary.all_ok is True
+
+
 def test_run_summary_reports_failure_when_any_tab_fails():
     def outcome(code):
         return TabOutcome(plan=None, returncode=code, elapsed=1.0)

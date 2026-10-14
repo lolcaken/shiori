@@ -38,15 +38,20 @@ def test_invalid_options_return_exit_code_2(capsys):
 
 
 def test_run_writes_a_log_file_next_to_the_archive(monkeypatch, tmp_path, capsys):
-    monkeypatch.setattr(
-        entrypoint, "run_all", lambda plans, runner=None, fail_fast=False: RunSummary()
-    )
+    seen = {}
+
+    def fake_run_all(plans, runner=None, fail_fast=False, probe=None):
+        seen["probe"] = probe
+        return RunSummary()
+
+    monkeypatch.setattr(entrypoint, "run_all", fake_run_all)
     code = entrypoint.main([
         "https://www.youtube.com/@SomeChannel",
         "-o", str(tmp_path),
         "--channel-name", "Some Channel",
     ])
     assert code == 0
+    assert callable(seen["probe"])  # tab-existence probe is wired through
     logs = list((tmp_path / "Some Channel" / ".shiori-logs").glob("*.log"))
     assert len(logs) == 1
     assert "shiori: archiving Some Channel" in logs[0].read_text(encoding="utf-8")
@@ -54,7 +59,7 @@ def test_run_writes_a_log_file_next_to_the_archive(monkeypatch, tmp_path, capsys
 
 def test_no_log_disables_the_log_file(monkeypatch, tmp_path):
     monkeypatch.setattr(
-        entrypoint, "run_all", lambda plans, runner=None, fail_fast=False: RunSummary()
+        entrypoint, "run_all", lambda plans, runner=None, fail_fast=False, probe=None: RunSummary()
     )
     code = entrypoint.main([
         "https://www.youtube.com/@SomeChannel",

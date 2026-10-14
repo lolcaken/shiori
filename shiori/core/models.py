@@ -51,6 +51,8 @@ class TabOutcome:
     plan: DownloadPlan | None
     returncode: int
     elapsed: float
+    partial: bool = False
+    skipped: bool = False
 
 
 @dataclass
@@ -59,11 +61,19 @@ class RunSummary:
 
     @property
     def succeeded(self) -> list[TabOutcome]:
-        return [o for o in self.outcomes if o.returncode == 0]
+        return [o for o in self.outcomes if o.returncode == 0 and not o.skipped]
 
     @property
     def failed(self) -> list[TabOutcome]:
-        return [o for o in self.outcomes if o.returncode != 0]
+        return [o for o in self.outcomes if o.returncode != 0 and not o.partial]
+
+    @property
+    def partial(self) -> list[TabOutcome]:
+        return [o for o in self.outcomes if o.partial]
+
+    @property
+    def skipped(self) -> list[TabOutcome]:
+        return [o for o in self.outcomes if o.skipped]
 
     @property
     def all_ok(self) -> bool:

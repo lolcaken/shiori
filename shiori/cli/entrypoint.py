@@ -12,7 +12,7 @@ from shiori.planner.builder import build_plans
 from shiori.runner.logfile import log_session
 from shiori.runner.preflight import preflight
 from shiori.runner.reporting import format_summary
-from shiori.runner.resolve import resolve_channel_name
+from shiori.runner.resolve import check_tab_exists, resolve_channel_name
 from shiori.runner.scratch import scratch_dir
 from shiori.runner.sequencer import run_all
 
@@ -52,6 +52,10 @@ def _run(argv: list[str] | None) -> int:
 def _execute(options, tools: dict[str, str], plans, channel_name: str) -> int:
     print(f"shiori: archiving {channel_name} "
           f"(yt-dlp {tools['yt-dlp']}, {tools['ffmpeg'].splitlines()[0]})")
-    summary = run_all(plans, fail_fast=options.fail_fast)
+
+    def probe(plan) -> None:
+        check_tab_exists(options.yt_dlp, plan.url)
+
+    summary = run_all(plans, fail_fast=options.fail_fast, probe=probe)
     print(format_summary(summary))
     return 0 if summary.all_ok else 1

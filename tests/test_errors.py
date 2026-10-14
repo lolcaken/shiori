@@ -3,6 +3,7 @@ from shiori.core.errors import (
     ShioriError,
     ChannelResolveError,
     PreflightError,
+    TabMissingError,
     UsageError,
 )
 
@@ -11,6 +12,7 @@ def test_errors_form_a_hierarchy_under_shiori_error():
     assert issubclass(UsageError, ShioriError)
     assert issubclass(PreflightError, ShioriError)
     assert issubclass(ChannelResolveError, ShioriError)
+    assert issubclass(TabMissingError, ShioriError)
 
 
 def test_usage_errors_exit_with_code_2():

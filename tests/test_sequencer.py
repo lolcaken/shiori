@@ -68,6 +68,51 @@ def test_each_tab_is_announced_as_it_starts(capsys):
     assert "videos" in out and "shorts" in out
 
 
+def test_missing_tab_is_skipped_not_failed(capsys):
+    from shiori.core.errors import TabMissingError
+
+    plans = build_plans(make_options(), "Some Channel", Path("/tmp/subs"))
+
+    def probe(plan):
+        if plan.tab is Tab.SHORTS:
+            raise TabMissingError("no shorts tab")
+
+    summary = run_all(plans, runner=stub_runner([0]), fail_fast=False, probe=probe)
+    out = capsys.readouterr().out
+    assert "-- no shorts tab, skipping" in out
+    assert summary.all_ok is True
+    assert len(summary.skipped) == 1
+    assert len(summary.succeeded) == 1
+
+
+def test_errored_tab_with_new_files_is_partial_not_failed(capsys, tmp_path):
+    options = make_options(output_dir=tmp_path)
+    plans = build_plans(options, "Some Channel", tmp_path / "subs")
+
+    def runner(plan):
+        plan.tab_dir.mkdir(parents=True, exist_ok=True)
+        (plan.tab_dir / "new.mp4").write_bytes(b"y" * 1024)
+        return TabOutcome(plan=plan, returncode=1, elapsed=0.5)
+
+    summary = run_all([plans[0]], runner=runner, fail_fast=False)
+    out = capsys.readouterr().out
+    assert "completed with errors" in out
+    assert summary.all_ok is True
+    assert len(summary.partial) == 1
+
+
+def test_errored_tab_with_no_new_files_is_a_real_failure(capsys, tmp_path):
+    options = make_options(output_dir=tmp_path)
+    plans = build_plans(options, "Some Channel", tmp_path / "subs")
+
+    def runner(plan):
+        return TabOutcome(plan=plan, returncode=1, elapsed=0.5)
+
+    summary = run_all([plans[0]], runner=runner, fail_fast=False)
+    assert "completed with errors" not in capsys.readouterr().out
+    assert summary.all_ok is False
+
+
 def test_each_tab_reports_bytes_downloaded(capsys, tmp_path):
     options = make_options(output_dir=tmp_path)
     plans = build_plans(options, "Some Channel", tmp_path / "subs")

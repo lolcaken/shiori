@@ -15,3 +15,7 @@ class PreflightError(ShioriError):
 
 class ChannelResolveError(ShioriError):
     exit_code = 1
+
+
+class TabMissingError(ShioriError):
+    """A channel tab (e.g. streams) does not exist — skip it, don't fail."""

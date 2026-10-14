@@ -1,8 +1,15 @@
 """Tests for shiori.runner.resolve — turning a channel URL into a display name."""
 import pytest
 
-from shiori.core.errors import ChannelResolveError
-from shiori.runner.resolve import parse_channel_name, resolve_argv, resolve_channel_name
+from shiori.core.errors import ChannelResolveError, TabMissingError
+from shiori.runner.resolve import (
+    check_tab_exists,
+    is_missing_tab,
+    parse_channel_name,
+    resolve_argv,
+    resolve_channel_name,
+    tab_probe_argv,
+)
 
 
 def test_resolve_argv_is_a_lightweight_flat_playlist_print():
@@ -48,3 +55,43 @@ def test_resolve_failure_is_a_channel_error():
 
     with pytest.raises(ChannelResolveError):
         resolve_channel_name("yt-dlp", "https://www.youtube.com/@X", run=failing_run)
+
+
+def test_tab_probe_argv_lists_without_downloading():
+    argv = tab_probe_argv("yt-dlp", "https://www.youtube.com/@X/streams")
+    assert "--flat-playlist" in argv
+    assert "--skip-download" in argv
+    assert argv[-1] == "https://www.youtube.com/@X/streams"
+
+
+def test_missing_tab_signature_is_detected():
+    assert is_missing_tab(1, "ERROR: [youtube:tab] @X: This channel does not have a streams tab") is True
+    assert is_missing_tab(0, "") is False
+    assert is_missing_tab(1, "ERROR: [youtube] 123: Private video") is False
+
+
+def test_check_tab_exists_raises_only_for_missing_tabs():
+    def run_for(output, returncode):
+        def fake_run(argv, **kwargs):
+            class Completed:
+                pass
+            Completed.returncode = returncode
+            Completed.stdout = output
+            Completed.stderr = output
+            return Completed()
+        return fake_run
+
+    with pytest.raises(TabMissingError):
+        check_tab_exists(
+            "yt-dlp", "https://www.youtube.com/@X/streams",
+            run=run_for("This channel does not have a streams tab", 1),
+        )
+    # Any other outcome (even other errors) proceeds to download.
+    check_tab_exists(
+        "yt-dlp", "https://www.youtube.com/@X/videos",
+        run=run_for("", 0),
+    )
+    check_tab_exists(
+        "yt-dlp", "https://www.youtube.com/@X/videos",
+        run=run_for("ERROR: network blip", 1),
+    )
