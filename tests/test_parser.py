@@ -1,7 +1,7 @@
-"""Tests for akari.cli.parser — the argument surface."""
+"""Tests for shiori.cli.parser — the argument surface."""
 import pytest
 
-from akari.cli.parser import build_parser
+from shiori.cli.parser import build_parser
 
 
 def test_defaults_archive_videos_with_english_subs():

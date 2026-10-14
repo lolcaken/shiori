@@ -1,7 +1,7 @@
-"""Tests for akari.naming.subtags — the [lang] tag derived from --sub-langs."""
+"""Tests for shiori.naming.subtags — the [lang] tag derived from --sub-langs."""
 
 
-from akari.naming.subtags import subtitle_tag
+from shiori.naming.subtags import subtitle_tag
 
 
 def test_regex_suffix_is_cleaned_off():

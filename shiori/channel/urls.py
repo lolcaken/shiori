@@ -3,9 +3,9 @@ from __future__ import annotations
 
 from urllib.parse import urlparse
 
-from akari.channel.tabs import TAB_SPECS, spec_for
-from akari.core.errors import UsageError
-from akari.core.models import Tab
+from shiori.channel.tabs import TAB_SPECS, spec_for
+from shiori.core.errors import UsageError
+from shiori.core.models import Tab
 
 _KNOWN_TAB_SUFFIXES = tuple(f"/{spec.url_suffix}" for spec in TAB_SPECS.values())
 

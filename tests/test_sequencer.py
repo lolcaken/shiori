@@ -1,9 +1,9 @@
-"""Tests for akari.runner.sequencer — plans run in order, outcomes aggregated."""
+"""Tests for shiori.runner.sequencer — plans run in order, outcomes aggregated."""
 from pathlib import Path
 
-from akari.core.models import Options, Tab, TabOutcome
-from akari.planner.builder import build_plans
-from akari.runner.sequencer import run_all
+from shiori.core.models import Options, Tab, TabOutcome
+from shiori.planner.builder import build_plans
+from shiori.runner.sequencer import run_all
 
 
 def make_options(**overrides):

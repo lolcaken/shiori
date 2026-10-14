@@ -1,10 +1,10 @@
-"""Tests for akari.cli.options — namespace validation into Options."""
+"""Tests for shiori.cli.options — namespace validation into Options."""
 import pytest
 
-from akari.cli.options import options_from_namespace
-from akari.cli.parser import build_parser
-from akari.core.errors import UsageError
-from akari.core.models import Tab
+from shiori.cli.options import options_from_namespace
+from shiori.cli.parser import build_parser
+from shiori.core.errors import UsageError
+from shiori.core.models import Tab
 
 
 def parse(args):

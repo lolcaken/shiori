@@ -1,17 +1,17 @@
 """Every failure the app can report, each carrying its process exit code."""
 
 
-class AkariError(Exception):
+class ShioriError(Exception):
     exit_code: int = 1
 
 
-class UsageError(AkariError):
+class UsageError(ShioriError):
     exit_code = 2
 
 
-class PreflightError(AkariError):
+class PreflightError(ShioriError):
     exit_code = 3
 
 
-class ChannelResolveError(AkariError):
+class ChannelResolveError(ShioriError):
     exit_code = 1

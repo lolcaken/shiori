@@ -1,9 +1,9 @@
-"""Tests for akari.core.models — the shared vocabulary of the app."""
+"""Tests for shiori.core.models — the shared vocabulary of the app."""
 from pathlib import Path
 
 import pytest
 
-from akari.core.models import DownloadPlan, Options, RunSummary, Tab, TabOutcome
+from shiori.core.models import DownloadPlan, Options, RunSummary, Tab, TabOutcome
 
 
 def test_tab_covers_videos_shorts_and_streams():
@@ -52,7 +52,7 @@ def test_download_plan_carries_its_argv():
         channel_name="Some Channel",
         channel_folder="Some Channel",
         tab_dir=Path("archives/Some Channel/videos"),
-        archive_path=Path("archives/Some Channel/.akari-archive.txt"),
+        archive_path=Path("archives/Some Channel/.shiori-archive.txt"),
         argv=["yt-dlp", "https://www.youtube.com/@SomeChannel/videos"],
     )
     assert plan.argv[0] == "yt-dlp"

@@ -7,9 +7,9 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from akari.core.models import DownloadPlan, RunSummary, TabOutcome
-from akari.runner.process import run_plan
-from akari.runner.reporting import format_tab_header
+from shiori.core.models import DownloadPlan, RunSummary, TabOutcome
+from shiori.runner.process import run_plan
+from shiori.runner.reporting import format_tab_header
 
 
 def run_all(

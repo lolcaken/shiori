@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import re
 
-from akari.core.errors import UsageError
+from shiori.core.errors import UsageError
 
 _ILLEGAL = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
 

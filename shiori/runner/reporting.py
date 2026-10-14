@@ -1,7 +1,7 @@
 """Render the end-of-run summary for the terminal."""
 from __future__ import annotations
 
-from akari.core.models import DownloadPlan, RunSummary
+from shiori.core.models import DownloadPlan, RunSummary
 
 
 def format_tab_header(plan: DownloadPlan) -> str:

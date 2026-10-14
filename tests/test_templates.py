@@ -1,7 +1,7 @@
-"""Tests for akari.naming.templates — the yt-dlp -o filename template."""
+"""Tests for shiori.naming.templates — the yt-dlp -o filename template."""
 
 
-from akari.naming.templates import video_filename_template
+from shiori.naming.templates import video_filename_template
 
 
 def test_template_carries_date_title_tag_and_extension():

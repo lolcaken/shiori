@@ -1,7 +1,7 @@
-"""Tests for akari.planner.flag_sets — argv grouped by concern."""
+"""Tests for shiori.planner.flag_sets — argv grouped by concern."""
 from pathlib import Path
 
-from akari.planner import flag_sets
+from shiori.planner import flag_sets
 
 
 def test_format_flags_request_mp4():
@@ -26,8 +26,8 @@ def test_subtitle_flags_fetch_real_and_auto_subs_and_embed_them():
 
 
 def test_resume_flags_use_the_download_archive_by_default():
-    flags = flag_sets.resume_flags(Path("archives/Chan/.akari-archive.txt"), full=False)
-    assert flags[flags.index("--download-archive") + 1].endswith(".akari-archive.txt")
+    flags = flag_sets.resume_flags(Path("archives/Chan/.shiori-archive.txt"), full=False)
+    assert flags[flags.index("--download-archive") + 1].endswith(".shiori-archive.txt")
     assert "--continue" in flags
     assert "--no-overwrites" in flags
 

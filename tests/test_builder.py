@@ -1,8 +1,8 @@
-"""Tests for akari.planner.builder — Options + channel name -> DownloadPlans."""
+"""Tests for shiori.planner.builder — Options + channel name -> DownloadPlans."""
 from pathlib import Path
 
-from akari.core.models import Options, Tab
-from akari.planner.builder import build_plans
+from shiori.core.models import Options, Tab
+from shiori.planner.builder import build_plans
 
 
 def make_options(**overrides):
@@ -37,7 +37,7 @@ def test_plans_share_one_channel_folder_and_archive_file():
     plans = build_plans(make_options(), "Some Channel", Path("/tmp/subs"))
     assert plans[0].channel_folder == "Some Channel"
     assert plans[0].archive_path == plans[1].archive_path
-    assert plans[0].archive_path.name == ".akari-archive.txt"
+    assert plans[0].archive_path.name == ".shiori-archive.txt"
 
 
 def test_tab_dirs_are_split_per_category():

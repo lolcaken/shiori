@@ -1,9 +1,9 @@
-"""Tests for akari.runner.reporting — the human-readable end-of-run summary."""
+"""Tests for shiori.runner.reporting — the human-readable end-of-run summary."""
 from pathlib import Path
 
-from akari.core.models import Options, RunSummary, Tab, TabOutcome
-from akari.planner.builder import build_plans
-from akari.runner.reporting import format_summary, format_tab_header
+from shiori.core.models import Options, RunSummary, Tab, TabOutcome
+from shiori.planner.builder import build_plans
+from shiori.runner.reporting import format_summary, format_tab_header
 
 
 def make_options():

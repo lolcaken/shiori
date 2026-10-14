@@ -4,7 +4,7 @@ from __future__ import annotations
 import subprocess
 from typing import Callable
 
-from akari.core.errors import ChannelResolveError
+from shiori.core.errors import ChannelResolveError
 
 
 def resolve_argv(yt_dlp: str, channel_url: str) -> list[str]:

@@ -17,8 +17,8 @@ import sys
 import time
 from pathlib import Path
 
-from akari.core.models import DownloadPlan, TabOutcome
-from akari.runner.progress import (
+from shiori.core.models import DownloadPlan, TabOutcome
+from shiori.runner.progress import (
     ErrorLine,
     FileStart,
     MergeStart,

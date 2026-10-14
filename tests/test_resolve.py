@@ -1,8 +1,8 @@
-"""Tests for akari.runner.resolve — turning a channel URL into a display name."""
+"""Tests for shiori.runner.resolve — turning a channel URL into a display name."""
 import pytest
 
-from akari.core.errors import ChannelResolveError
-from akari.runner.resolve import parse_channel_name, resolve_argv, resolve_channel_name
+from shiori.core.errors import ChannelResolveError
+from shiori.runner.resolve import parse_channel_name, resolve_argv, resolve_channel_name
 
 
 def test_resolve_argv_is_a_lightweight_flat_playlist_print():

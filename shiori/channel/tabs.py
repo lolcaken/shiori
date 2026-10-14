@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from akari.core.models import Tab
+from shiori.core.models import Tab
 
 
 @dataclass(frozen=True)

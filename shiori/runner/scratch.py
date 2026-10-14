@@ -13,6 +13,6 @@ from pathlib import Path
 
 
 @contextlib.contextmanager
-def scratch_dir(prefix: str = "akari-subs-") -> Iterator[Path]:
+def scratch_dir(prefix: str = "shiori-subs-") -> Iterator[Path]:
     with tempfile.TemporaryDirectory(prefix=prefix) as tmp:
         yield Path(tmp)

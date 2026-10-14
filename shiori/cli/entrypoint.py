@@ -5,24 +5,24 @@ import shlex
 import sys
 from functools import partial
 
-from akari.channel.urls import normalize_channel_url
-from akari.cli.options import options_from_namespace
-from akari.cli.parser import build_parser
-from akari.core.errors import AkariError
-from akari.planner.builder import build_plans
-from akari.runner.preflight import preflight
-from akari.runner.process import run_plan
-from akari.runner.reporting import format_summary
-from akari.runner.resolve import resolve_channel_name
-from akari.runner.scratch import scratch_dir
-from akari.runner.sequencer import run_all
+from shiori.channel.urls import normalize_channel_url
+from shiori.cli.options import options_from_namespace
+from shiori.cli.parser import build_parser
+from shiori.core.errors import ShioriError
+from shiori.planner.builder import build_plans
+from shiori.runner.preflight import preflight
+from shiori.runner.process import run_plan
+from shiori.runner.reporting import format_summary
+from shiori.runner.resolve import resolve_channel_name
+from shiori.runner.scratch import scratch_dir
+from shiori.runner.sequencer import run_all
 
 
 def main(argv: list[str] | None = None) -> int:
     try:
         return _run(argv)
-    except AkariError as exc:
-        print(f"akari: error: {exc}", file=sys.stderr)
+    except ShioriError as exc:
+        print(f"shiori: error: {exc}", file=sys.stderr)
         return exc.exit_code
 
 
@@ -41,7 +41,7 @@ def _run(argv: list[str] | None) -> int:
             for plan in plans:
                 print(shlex.join(plan.argv))
             return 0
-        print(f"akari: archiving {channel_name} "
+        print(f"shiori: archiving {channel_name} "
               f"(yt-dlp {tools['yt-dlp']}, {tools['ffmpeg'].splitlines()[0]})")
         summary = run_all(
             plans,

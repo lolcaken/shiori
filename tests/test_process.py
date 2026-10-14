@@ -1,10 +1,10 @@
-"""Tests for akari.runner.process — running ONE plan as a subprocess."""
+"""Tests for shiori.runner.process — running ONE plan as a subprocess."""
 import io
 import sys
 from pathlib import Path
 
-from akari.core.models import DownloadPlan, Tab
-from akari.runner.process import run_plan
+from shiori.core.models import DownloadPlan, Tab
+from shiori.runner.process import run_plan
 
 
 def make_plan(argv):
@@ -14,7 +14,7 @@ def make_plan(argv):
         channel_name="Some Channel",
         channel_folder="Some Channel",
         tab_dir=Path("archives/Some Channel/videos"),
-        archive_path=Path("archives/Some Channel/.akari-archive.txt"),
+        archive_path=Path("archives/Some Channel/.shiori-archive.txt"),
         argv=argv,
     )
 

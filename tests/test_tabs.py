@@ -1,8 +1,8 @@
-"""Tests for akari.channel.tabs — the registry mapping tabs to URL/folder."""
+"""Tests for shiori.channel.tabs — the registry mapping tabs to URL/folder."""
 import pytest
 
-from akari.channel.tabs import spec_for
-from akari.core.models import Tab
+from shiori.channel.tabs import spec_for
+from shiori.core.models import Tab
 
 
 def test_every_tab_has_a_spec():

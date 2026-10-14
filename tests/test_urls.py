@@ -1,9 +1,9 @@
-"""Tests for akari.channel.urls — normalizing channel URLs, building tab URLs."""
+"""Tests for shiori.channel.urls — normalizing channel URLs, building tab URLs."""
 import pytest
 
-from akari.channel.urls import normalize_channel_url, tab_url
-from akari.core.errors import UsageError
-from akari.core.models import Tab
+from shiori.channel.urls import normalize_channel_url, tab_url
+from shiori.core.errors import UsageError
+from shiori.core.models import Tab
 
 
 def test_trailing_slash_is_stripped():

@@ -1,8 +1,8 @@
-"""Tests for akari.naming.folder — safe on-disk folder names."""
+"""Tests for shiori.naming.folder — safe on-disk folder names."""
 import pytest
 
-from akari.core.errors import UsageError
-from akari.naming.folder import sanitize_folder_name
+from shiori.core.errors import UsageError
+from shiori.naming.folder import sanitize_folder_name
 
 
 def test_plain_display_name_passes_through():

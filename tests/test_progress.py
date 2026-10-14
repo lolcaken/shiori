@@ -1,5 +1,5 @@
-"""Tests for akari.runner.progress — typed events parsed from yt-dlp output."""
-from akari.runner.progress import (
+"""Tests for shiori.runner.progress — typed events parsed from yt-dlp output."""
+from shiori.runner.progress import (
     ErrorLine,
     FileStart,
     Ignored,

@@ -1,16 +1,16 @@
-"""Tests for akari.core.errors — every failure maps to an exit code."""
-from akari.core.errors import (
-    AkariError,
+"""Tests for shiori.core.errors — every failure maps to an exit code."""
+from shiori.core.errors import (
+    ShioriError,
     ChannelResolveError,
     PreflightError,
     UsageError,
 )
 
 
-def test_errors_form_a_hierarchy_under_akari_error():
-    assert issubclass(UsageError, AkariError)
-    assert issubclass(PreflightError, AkariError)
-    assert issubclass(ChannelResolveError, AkariError)
+def test_errors_form_a_hierarchy_under_shiori_error():
+    assert issubclass(UsageError, ShioriError)
+    assert issubclass(PreflightError, ShioriError)
+    assert issubclass(ChannelResolveError, ShioriError)
 
 
 def test_usage_errors_exit_with_code_2():

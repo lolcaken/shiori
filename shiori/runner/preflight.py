@@ -1,10 +1,10 @@
-"""Verify the external tools akari shells out to are present and runnable."""
+"""Verify the external tools shiori shells out to are present and runnable."""
 from __future__ import annotations
 
 import shutil
 import subprocess
 
-from akari.core.errors import PreflightError
+from shiori.core.errors import PreflightError
 
 
 def find_binary(name: str) -> str:

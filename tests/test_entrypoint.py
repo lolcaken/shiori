@@ -1,6 +1,6 @@
-"""Tests for akari.cli.entrypoint — the pipeline and its exit codes."""
-import akari.cli.entrypoint as entrypoint
-from akari.core.errors import PreflightError
+"""Tests for shiori.cli.entrypoint — the pipeline and its exit codes."""
+import shiori.cli.entrypoint as entrypoint
+from shiori.core.errors import PreflightError
 
 
 def bomb_resolve(*args, **kwargs):

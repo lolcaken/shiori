@@ -4,8 +4,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from akari.core.errors import UsageError
-from akari.core.models import Options, Tab
+from shiori.core.errors import UsageError
+from shiori.core.models import Options, Tab
 
 _TYPE_TO_TABS: dict[str, tuple[Tab, ...]] = {
     "videos": (Tab.VIDEOS,),

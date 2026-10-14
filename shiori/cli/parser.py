@@ -6,7 +6,7 @@ import argparse
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="akari",
+        prog="shiori",
         description=(
             "Archive a YouTube channel to local mp4 files with embedded "
             "soft subtitles. Re-runs only fetch new uploads."

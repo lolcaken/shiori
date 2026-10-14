@@ -3,13 +3,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from akari.channel.tabs import spec_for
-from akari.channel.urls import normalize_channel_url, tab_url
-from akari.core.models import DownloadPlan, Options
-from akari.naming.folder import sanitize_folder_name
-from akari.naming.subtags import subtitle_tag
-from akari.naming.templates import video_filename_template
-from akari.planner import flag_sets
+from shiori.channel.tabs import spec_for
+from shiori.channel.urls import normalize_channel_url, tab_url
+from shiori.core.models import DownloadPlan, Options
+from shiori.naming.folder import sanitize_folder_name
+from shiori.naming.subtags import subtitle_tag
+from shiori.naming.templates import video_filename_template
+from shiori.planner import flag_sets
 
 
 def build_plans(
@@ -21,7 +21,7 @@ def build_plans(
     filename = video_filename_template(tag)
 
     channel_dir = options.output_dir / folder
-    archive_path = channel_dir / ".akari-archive.txt"
+    archive_path = channel_dir / ".shiori-archive.txt"
 
     plans = []
     for tab in options.tabs:
