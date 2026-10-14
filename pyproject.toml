@@ -1,5 +1,5 @@
 [project]
-name = "shiori"
+name = "shiori-archiver"
 version = "0.1.0"
 description = "Archive a YouTube channel to local mp4 files with embedded soft subtitles"
 readme = "README.md"
