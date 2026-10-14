@@ -17,7 +17,7 @@ Shiori archives a whole YouTube channel to plain `.mp4` files on your disk:
 - **Videos, shorts, livestreams** — pick one tab or take all three, each landing in its own folder.
 - **Captions baked in as soft subtitles** — both the uploader's subtitles *and* YouTube's auto-generated ones ride along inside the mp4 as toggleable text tracks. The video itself is never re-encoded, and no `.vtt` files are left behind.
 - **Incremental by default** — every run records video IDs in `.shiori-archive.txt`, so re-running a 500-video channel fetches only the new uploads.
-- **Quiet, honest logs** — one live progress line per video, one `ok` line per finished file, skips collapsed to a single count, and every run mirrored to a timestamped log file.
+- **Untouched download output** — yt-dlp's own progress streams straight to your terminal, exactly as it emits it. Tab headers, a per-tab summary, and a timestamped log file wrap around it.
 
 Shiori is a thin, opinionated wrapper around [yt-dlp](https://github.com/yt-dlp/yt-dlp). It has **zero runtime dependencies** — everything else is the Python standard library.
 
@@ -49,12 +49,13 @@ shiori "https://www.youtube.com/@SomeChannel" --type all
 
 Bare handles work too: `shiori @SomeChannel`. It also accepts `/channel/…`, `/c/…` and `/user/…` URLs.
 
-A real session looks like this:
+A real session looks like this (yt-dlp's own output streams straight through):
 
 ```
 shiori: archiving YouTube (yt-dlp 2026.08.19, ffmpeg version N-125365-g9a01c1cb6a-20260630)
 == shorts ==  https://www.youtube.com/@YouTube/shorts
-  ok 2026-10-13 - carrying the pots and pans is a rite of passage @andrewtrs [en].mp4 (4.2s)
+[download] 100% of  448.87KiB in 00:00:00 at 926.63KiB/s
+[Merger] Merging formats into ".../2026-10-13 - carrying the pots and pans is a rite of passage @andrewtrs [en].mp4"
 Archive run: 1 tab, 1 ok, 0 failed
 ```
 
@@ -78,11 +79,11 @@ Filenames are `upload-date - title [subtitle-langs].mp4`. Every mp4 carries `h26
 
 ## Re-runs
 
-Run the same command weekly, monthly, whenever. Already-archived videos collapse to one line per tab:
+Run the same command weekly, monthly, whenever. Videos already in `.shiori-archive.txt` are skipped by yt-dlp, so only new uploads download:
 
 ```
 == shorts ==  https://www.youtube.com/@SomeChannel/shorts
-  1 already archived
+[download] Q_BC8ZhiZoU: carrying the pots and pans is a rite of passage @andrewtrs has already been recorded in the archive
 Archive run: 1 tab, 1 ok, 0 failed
 ```
 
@@ -95,7 +96,7 @@ usage: shiori [-h] [-o OUTPUT] [-t {videos,shorts,all}]
               [--sub-langs SUB_LANGS] [--since SINCE] [--until UNTIL]
               [--full] [-j JOBS] [--cookies COOKIES] [--dry-run]
               [--yt-dlp YT_DLP] [--fail-fast] [--channel-name CHANNEL_NAME]
-              [--sleep SLEEP] [--verbose] [--throttled-rate THROTTLED_RATE]
+              [--sleep SLEEP] [--throttled-rate THROTTLED_RATE]
               [--http-chunk-size HTTP_CHUNK_SIZE] [--ipv4] [--no-log]
               url
 ```
@@ -114,12 +115,10 @@ usage: shiori [-h] [-o OUTPUT] [-t {videos,shorts,all}]
 | `--fail-fast` | Stop remaining tabs after the first failure |
 | `--channel-name NAME` | Skip the channel-name lookup (keeps `--dry-run` fully offline) |
 | `--sleep N` | Seconds between requests (default: 2.0) |
-| `--verbose` | Show raw yt-dlp output instead of the organized log |
 | `--throttled-rate R` | Re-extract when a download crawls below this (default: `100K`, `0` disables) |
 | `--http-chunk-size S` | Size of chunked range requests (default: `10M`) |
 | `--ipv4` | Force all connections over IPv4 |
 | `--no-log` | Don't write the per-run log file |
-| `--no-color` | Plain log lines instead of highlighted download progress |
 
 Exit codes: `0` success · `1` a tab failed (the rest still ran) · `2` bad usage · `3` missing yt-dlp/ffmpeg.
 
