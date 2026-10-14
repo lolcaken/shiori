@@ -32,6 +32,7 @@ class Options:
     throttled_rate: str = "100K"
     http_chunk_size: str = "10M"
     force_ipv4: bool = False
+    no_log: bool = False
 
 
 @dataclass(frozen=True)
@@ -52,6 +53,7 @@ class TabOutcome:
     elapsed: float
     errors: int = 0
     warnings: int = 0
+    skipped: int = 0
 
 
 @dataclass

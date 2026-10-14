@@ -5,6 +5,7 @@ from shiori.runner.progress import (
     Ignored,
     MergeStart,
     Progress,
+    RemuxStart,
     Skipped,
     WarningLine,
     parse_line,
@@ -38,6 +39,14 @@ def test_merger_line_announces_the_final_file():
     assert event == MergeStart(path="some/movie [en].mp4")
 
 
+def test_remuxer_line_announces_the_final_mp4_whatever_the_wording():
+    event = parse_line(
+        '[VideoRemuxer] Not remuxing media file "some/movie [en].mp4"; '
+        "already is in target format mp4"
+    )
+    assert event == RemuxStart(path="some/movie [en].mp4")
+
+
 def test_already_downloaded_is_a_skip():
     event = parse_line("[download] some/dir/video.mp4 has already been downloaded")
     assert event == Skipped(path="some/dir/video.mp4")
@@ -61,7 +70,7 @@ def test_warning_line_is_counted():
 def test_extraction_chatter_and_postprocessing_are_ignored():
     assert isinstance(parse_line("[youtube] abc: Downloading webpage"), Ignored)
     assert isinstance(
-        parse_line('[VideoRemuxer] Not remuxing media file "x.mp4"'), Ignored
+        parse_line('[EmbedThumbnail] mutagen: Adding thumbnail to "x.mp4"'), Ignored
     )
     assert isinstance(parse_line("[EmbedSubtitle] Embedding subtitles"), Ignored)
     assert isinstance(parse_line(""), Ignored)

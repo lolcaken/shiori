@@ -15,6 +15,9 @@ _PROGRESS = re.compile(
 )
 _DESTINATION = re.compile(r"^\[download\] Destination: (.+)$")
 _MERGE = re.compile(r'^\[Merger\] Merging formats into "(.+)"$')
+# Deliberately tolerant: the exact VideoRemuxer wording is version-dependent.
+# Any quoted .mp4 path on such a line names the final container.
+_REMUX = re.compile(r'^\[VideoRemuxer\].*"(.+\.mp4)"')
 _SKIPPED = re.compile(
     r"^(?:\[download\] )?(.+) has already been "
     r"(downloaded(?: and merged)?|recorded in the archive)$"
@@ -54,6 +57,11 @@ class MergeStart:
 
 
 @dataclass(frozen=True)
+class RemuxStart:
+    path: str
+
+
+@dataclass(frozen=True)
 class Skipped:
     path: str
 
@@ -88,6 +96,9 @@ def parse_line(line: str):
     match = _MERGE.match(line)
     if match:
         return MergeStart(path=match.group(1).strip())
+    match = _REMUX.match(line)
+    if match:
+        return RemuxStart(path=match.group(1).strip())
     match = _SKIPPED.match(line)
     if match:
         return Skipped(path=match.group(1).strip())

@@ -35,6 +35,10 @@ def test_empty_run_summary_counts_as_success():
     assert RunSummary().all_ok is True
 
 
+def test_tab_outcome_counts_no_skips_by_default():
+    assert TabOutcome(plan=None, returncode=0, elapsed=1.0).skipped == 0
+
+
 def test_run_summary_reports_failure_when_any_tab_fails():
     def outcome(code):
         return TabOutcome(plan=None, returncode=code, elapsed=1.0)

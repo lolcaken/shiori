@@ -1,6 +1,7 @@
 """Tests for shiori.cli.entrypoint — the pipeline and its exit codes."""
 import shiori.cli.entrypoint as entrypoint
 from shiori.core.errors import PreflightError
+from shiori.core.models import RunSummary
 
 
 def bomb_resolve(*args, **kwargs):
@@ -34,3 +35,32 @@ def test_preflight_failure_returns_exit_code_3(monkeypatch, capsys):
 def test_invalid_options_return_exit_code_2(capsys):
     code = entrypoint.main(["https://www.youtube.com/@SomeChannel", "-j", "0"])
     assert code == 2
+
+
+def test_run_writes_a_log_file_next_to_the_archive(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(
+        entrypoint, "run_all", lambda plans, runner=None, fail_fast=False: RunSummary()
+    )
+    code = entrypoint.main([
+        "https://www.youtube.com/@SomeChannel",
+        "-o", str(tmp_path),
+        "--channel-name", "Some Channel",
+    ])
+    assert code == 0
+    logs = list((tmp_path / "Some Channel" / ".shiori-logs").glob("*.log"))
+    assert len(logs) == 1
+    assert "shiori: archiving Some Channel" in logs[0].read_text(encoding="utf-8")
+
+
+def test_no_log_disables_the_log_file(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        entrypoint, "run_all", lambda plans, runner=None, fail_fast=False: RunSummary()
+    )
+    code = entrypoint.main([
+        "https://www.youtube.com/@SomeChannel",
+        "-o", str(tmp_path),
+        "--channel-name", "Some Channel",
+        "--no-log",
+    ])
+    assert code == 0
+    assert not (tmp_path / "Some Channel" / ".shiori-logs").exists()

@@ -10,6 +10,7 @@ from shiori.cli.options import options_from_namespace
 from shiori.cli.parser import build_parser
 from shiori.core.errors import ShioriError
 from shiori.planner.builder import build_plans
+from shiori.runner.logfile import log_session
 from shiori.runner.preflight import preflight
 from shiori.runner.process import run_plan
 from shiori.runner.reporting import format_summary
@@ -41,12 +42,22 @@ def _run(argv: list[str] | None) -> int:
             for plan in plans:
                 print(shlex.join(plan.argv))
             return 0
-        print(f"shiori: archiving {channel_name} "
-              f"(yt-dlp {tools['yt-dlp']}, {tools['ffmpeg'].splitlines()[0]})")
-        summary = run_all(
-            plans,
-            runner=partial(run_plan, verbose=options.verbose),
-            fail_fast=options.fail_fast,
+        if options.no_log:
+            return _execute(options, tools, plans, channel_name)
+        log_dir = (
+            options.output_dir / plans[0].channel_folder / ".shiori-logs"
         )
-        print(format_summary(summary))
-        return 0 if summary.all_ok else 1
+        with log_session(log_dir):
+            return _execute(options, tools, plans, channel_name)
+
+
+def _execute(options, tools: dict[str, str], plans, channel_name: str) -> int:
+    print(f"shiori: archiving {channel_name} "
+          f"(yt-dlp {tools['yt-dlp']}, {tools['ffmpeg'].splitlines()[0]})")
+    summary = run_all(
+        plans,
+        runner=partial(run_plan, verbose=options.verbose),
+        fail_fast=options.fail_fast,
+    )
+    print(format_summary(summary))
+    return 0 if summary.all_ok else 1

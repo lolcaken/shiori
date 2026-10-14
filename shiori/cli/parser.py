@@ -74,4 +74,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--ipv4", action="store_true",
         help="force all connections over IPv4",
     )
+    parser.add_argument(
+        "--no-log", action="store_true",
+        help="do not write a per-run log file next to the archive",
+    )
     return parser

@@ -9,7 +9,7 @@ from collections.abc import Callable
 
 from shiori.core.models import DownloadPlan, RunSummary, TabOutcome
 from shiori.runner.process import run_plan
-from shiori.runner.reporting import format_tab_header
+from shiori.runner.reporting import format_archived_line, format_tab_header
 
 
 def run_all(
@@ -22,6 +22,9 @@ def run_all(
         print(format_tab_header(plan), flush=True)
         outcome = runner(plan)
         summary.outcomes.append(outcome)
+        archived = format_archived_line(outcome.skipped)
+        if archived:
+            print(archived, flush=True)
         if outcome.returncode != 0 and fail_fast:
             break
     return summary

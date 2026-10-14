@@ -56,3 +56,8 @@ def test_throttle_options_default_and_override():
     assert tuned.throttled_rate == "0"
     assert tuned.http_chunk_size == "5M"
     assert tuned.force_ipv4 is True
+
+
+def test_log_file_is_opt_out():
+    assert parse(["https://x"]).no_log is False
+    assert parse(["https://x", "--no-log"]).no_log is True

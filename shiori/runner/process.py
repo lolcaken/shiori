@@ -23,6 +23,7 @@ from shiori.runner.progress import (
     FileStart,
     MergeStart,
     Progress,
+    RemuxStart,
     Skipped,
     WarningLine,
     parse_line,
@@ -31,14 +32,18 @@ from shiori.runner.progress import (
 _SUBTITLE_EXTENSIONS = frozenset(
     {".vtt", ".srt", ".ass", ".lrc", ".ttml", ".srv1", ".srv2", ".srv3", ".json3"}
 )
+_IMAGE_EXTENSIONS = frozenset({".jpg", ".jpeg", ".png", ".webp"})
+# Containers --remux-video may still rewrite into the final .mp4.
+_INTERMEDIATE_EXTENSIONS = frozenset({".mkv", ".webm", ".mov", ".avi", ".flv", ".ts"})
 _FORMAT_PART = re.compile(r"\.f\d+\.[A-Za-z0-9]+$")
 
 
 def _kind_of(filename: str) -> str:
-    """Classify a destination file: a final video, a merge part, or a sidecar."""
-    if Path(filename).suffix.lower() in _SUBTITLE_EXTENSIONS:
+    """Classify a destination file: final video, merge/remux part, or sidecar."""
+    suffix = Path(filename).suffix.lower()
+    if suffix in _SUBTITLE_EXTENSIONS or suffix in _IMAGE_EXTENSIONS:
         return "sidecar"
-    if _FORMAT_PART.search(filename):
+    if suffix in _INTERMEDIATE_EXTENSIONS or _FORMAT_PART.search(filename):
         return "part"
     return "video"
 
@@ -56,10 +61,12 @@ def run_plan(plan: DownloadPlan, verbose: bool = False) -> TabOutcome:
     )
     errors = 0
     warnings = 0
+    skipped = 0
     current: str | None = None
     current_kind = "video"
     in_parts = False
     video_start = start
+    reported: set[str] = set()
     live = sys.stdout.isatty() and not verbose
     status_width = 0
 
@@ -76,10 +83,24 @@ def run_plan(plan: DownloadPlan, verbose: bool = False) -> TabOutcome:
             sys.stdout.write("\r" + " " * status_width + "\r")
         print(text, flush=True)
 
+    def report_ok(name: str, detail: str) -> None:
+        """Print one ok line per final file; never report a path twice."""
+        if name in reported:
+            return
+        reported.add(name)
+        show_line(f"  ok {name} ({detail})")
+
     assert proc.stdout is not None
     for raw in proc.stdout:
         line = raw.rstrip("\n")
         if verbose:
+            event = parse_line(line)
+            if isinstance(event, Skipped):
+                skipped += 1
+            elif isinstance(event, ErrorLine):
+                errors += 1
+            elif isinstance(event, WarningLine):
+                warnings += 1
             print(line, flush=True)
             continue
         event = parse_line(line)
@@ -93,29 +114,35 @@ def run_plan(plan: DownloadPlan, verbose: bool = False) -> TabOutcome:
                 video_start = time.monotonic()
                 in_parts = True
             # Sidecars never touch the video clock.
-        elif isinstance(event, MergeStart):
-            show_line(
-                f"  ok {Path(event.path).name} ({time.monotonic() - video_start:.1f}s)"
+        elif isinstance(event, (MergeStart, RemuxStart)):
+            report_ok(
+                Path(event.path).name, f"{time.monotonic() - video_start:.1f}s"
             )
             current = None
             in_parts = False
         elif isinstance(event, Progress):
             if event.done:
                 if current_kind == "video" and current is not None:
-                    size = f" ({event.total}" if event.total else " ("
-                    show_line(
-                        f"  ok {current}"
-                        f"{size}, {time.monotonic() - video_start:.1f}s)"
+                    size = f"{event.total}, " if event.total else ""
+                    report_ok(
+                        current,
+                        f"{size}{time.monotonic() - video_start:.1f}s",
                     )
                     in_parts = False
-                # Parts and sidecars stay silent: the MergeStart line
-                # reports a merged video; sidecars need no report.
+                # Parts and sidecars stay silent: the MergeStart/RemuxStart
+                # line reports a merged video; sidecars need no report.
                 current = None
             else:
-                show_status(f"  dl {event.describe()} -- {current or ''}".rstrip())
+                status = f"  dl {event.describe()} -- {current or ''}".rstrip()
+                if skipped:
+                    status += f" ({skipped} archived)"
+                show_status(status)
         elif isinstance(event, Skipped):
-            show_line(f"  skip {Path(event.path).name} (already archived)")
+            skipped += 1
+            downloading = current is not None and current_kind in ("video", "part")
             current = None
+            if live and not downloading:
+                show_status(f"  -- {skipped} archived")
         elif isinstance(event, ErrorLine):
             errors += 1
             show_line(f"  ERROR: {event.text}")
@@ -132,4 +159,5 @@ def run_plan(plan: DownloadPlan, verbose: bool = False) -> TabOutcome:
         elapsed=time.monotonic() - start,
         errors=errors,
         warnings=warnings,
+        skipped=skipped,
     )
