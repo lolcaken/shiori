@@ -106,6 +106,17 @@ Notes, honestly stated:
 - If *every* client fails on a video, your IP is hard-flagged: change networks, slow down, or accept cookies for those items. Static hardcoded PO tokens don't work anymore (YouTube binds them per video); the heavy alternative is the bgutil PO-token server plus its yt-dlp plugin.
 - Cookies remain the reliable fix whenever they're an option.
 
+## Missing tabs & partial runs
+
+Not every channel has every tab. If `@SomeChannel` has no livestreams, that tab is skipped — not failed:
+
+```
+== streams ==  https://www.youtube.com/@SomeChannel/streams
+  -- no streams tab, skipping
+```
+
+Similarly, a tab where some videos fail (gated items, deletions) but others download reports `completed with errors` and counts toward success — only a tab that errors with *nothing* new downloaded is a real `FAIL` (exit 1). A re-run of a healthy archive is all skips and `0 B` lines, exiting 0.
+
 ## Options
 
 ```
@@ -138,7 +149,7 @@ usage: shiori [-h] [-o OUTPUT] [-t {videos,shorts,all}]
 | `--extractor-args IE:ARGS` | Pass raw args to an extractor (repeatable; see Bot checks) |
 | `--no-log` | Don't write the per-run log file |
 
-Exit codes: `0` success · `1` a tab failed (the rest still ran) · `2` bad usage · `3` missing yt-dlp/ffmpeg.
+Exit codes: `0` success — including tabs that finished with errors or were skipped · `1` a tab failed outright (nothing new downloaded) · `2` bad usage · `3` missing yt-dlp/ffmpeg.
 
 ## How it works
 
@@ -146,7 +157,7 @@ One `yt-dlp` invocation per channel tab, with a curated flag set (`-t mp4`, soft
 
 ```
 parse → preflight (yt-dlp + ffmpeg) → resolve channel name
-      → plan one command per tab → run sequentially → report
+      → plan one command per tab → per tab: check it exists → run → measure → report
 ```
 
 ## For hackers
