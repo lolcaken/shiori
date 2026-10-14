@@ -117,6 +117,28 @@ Not every channel has every tab. If `@SomeChannel` has no livestreams, that tab 
 
 Similarly, a tab where some videos fail (gated items, deletions) but others download reports `completed with errors` and counts toward success — only a tab that errors with *nothing* new downloaded is a real `FAIL` (exit 1). A re-run of a healthy archive is all skips and `0 B` lines, exiting 0.
 
+## Heavy use
+
+Big channels mean long runs. Shiori parallelizes across videos, not fragments:
+
+```powershell
+shiori "https://www.youtube.com/@SomeChannel" --type all --workers 3
+```
+
+Each worker runs the exact same flags a single-shot run would use, on its own slice of video URLs with its own archive shard file — the fetched bytes are identical, only the concurrency differs, so **quality is untouched**. Shards merge back into `.shiori-archive.txt` when the tab finishes, and a live `143/500 videos` line tracks progress. `--workers 1` restores strict sequential mode; already-archived IDs are filtered before splitting, so a fully-archived tab skips downloading entirely.
+
+Three guards keep long runs safe:
+
+- **Disk check** — refuses to start below `--min-disk-gb` free space (default 5 GiB, `0` disables).
+- **Channel lock** — one run per channel folder at a time (`.shiori-lock`, stale locks from dead runs are taken over). `--no-lock` opts out.
+- **Cheap tab probes** — existence checks list a single item, so even 10k-video tabs start fast.
+
+For full output capture (shiori streams yt-dlp's own log straight to your terminal), mirror it yourself:
+
+```powershell
+shiori "https://www.youtube.com/@SomeChannel" --type all *>&1 | Tee-Object run.log
+```
+
 ## Options
 
 ```
@@ -137,6 +159,9 @@ usage: shiori [-h] [-o OUTPUT] [-t {videos,shorts,all}]
 | `--since / --until` | Date range filter (`YYYYMMDD`) |
 | `--full` | Ignore the archive file, re-download everything |
 | `-j, --jobs N` | Concurrent download fragments per video (default: 8) |
+| `--workers N` | Videos downloaded in parallel per tab (default: 3, `1` is sequential) |
+| `--min-disk-gb GB` | Refuse to start below this free space (default: 5.0, `0` disables) |
+| `--no-lock` | Allow concurrent runs on one channel (risks archive corruption) |
 | `--cookies FILE` | Netscape cookie jar, for age- or bot-gated channels (checked up front) |
 | `--dry-run` | Print the exact `yt-dlp` commands without running anything |
 | `--yt-dlp PATH` | yt-dlp binary to use (default: from `PATH`) |
