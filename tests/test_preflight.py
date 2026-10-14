@@ -1,8 +1,11 @@
 """Tests for shiori.runner.preflight — required tools must exist before work starts."""
+import shutil
 import sys
 from pathlib import Path
 
 import pytest
+
+TOOLS_AVAILABLE = bool(shutil.which("yt-dlp") and shutil.which("ffmpeg"))
 
 from shiori.core.errors import PreflightError
 from shiori.runner.preflight import check_disk_space, find_binary, preflight, tool_version
@@ -25,6 +28,8 @@ def test_unrunnable_binary_is_a_preflight_error(tmp_path):
 
 
 def test_preflight_confirms_yt_dlp_and_ffmpeg():
+    if not TOOLS_AVAILABLE:
+        pytest.skip("yt-dlp and ffmpeg binaries required")
     tools = preflight("yt-dlp")
     assert "yt-dlp" in tools["yt-dlp"].lower() or tools["yt-dlp"][0].isdigit()
     assert "ffmpeg" in tools["ffmpeg"].lower()

@@ -6,6 +6,12 @@
 
 <p align="center"><i>栞 — "bookmark." Your channel's bookmark.</i></p>
 
+<p align="center">
+  <a href="https://github.com/lolcaken/shiori/actions/workflows/test.yml"><img src="https://github.com/lolcaken/shiori/actions/workflows/test.yml/badge.svg" alt="tests"></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="python 3.11+">
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license">
+</p>
+
 <p align="center">Point Shiori at a YouTube channel. Come back later and run it again.</p>
 
 ---
@@ -205,3 +211,7 @@ python -m pytest tests/ -q
 ## Why "Shiori"?
 
 栞 (*shiori*) means **bookmark** — a guide slipped between pages so you can find your way back. That's the whole job: a bookmark for a channel, keeping your place while it grows.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
