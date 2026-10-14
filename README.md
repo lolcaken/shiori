@@ -8,6 +8,7 @@
 
 <p align="center">
   <a href="https://github.com/lolcaken/shiori/actions/workflows/test.yml"><img src="https://github.com/lolcaken/shiori/actions/workflows/test.yml/badge.svg" alt="tests"></a>
+  <a href="https://pypi.org/project/shiori-archiver/"><img src="https://img.shields.io/pypi/v/shiori-archiver" alt="PyPI version"></a>
   <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="python 3.11+">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license">
 </p>
