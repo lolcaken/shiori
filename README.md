@@ -6,7 +6,7 @@
 
 <p align="center"><i>栞 — "bookmark." Your channel's bookmark.</i></p>
 
-<p align="center">Point Shiori at a YouTube channel. Come back later and run it again — it only fetches what's new.</p>
+<p align="center">Point Shiori at a YouTube channel. Come back later and run it again.</p>
 
 ---
 
