@@ -26,6 +26,12 @@ def options_from_namespace(ns: argparse.Namespace) -> Options:
     cookies = Path(ns.cookies) if ns.cookies else None
     if cookies is not None and not cookies.is_file():
         raise UsageError(f"--cookies file does not exist: {cookies}")
+    extractor_args = tuple(ns.extractor_args or ())
+    for entry in extractor_args:
+        if ":" not in entry:
+            raise UsageError(
+                f"--extractor-args must look like IE:ARGS, got {entry!r}"
+            )
     return Options(
         url=ns.url,
         output_dir=Path(ns.output),
@@ -45,4 +51,5 @@ def options_from_namespace(ns: argparse.Namespace) -> Options:
         http_chunk_size=ns.http_chunk_size,
         force_ipv4=ns.ipv4,
         no_log=ns.no_log,
+        extractor_args=extractor_args,
     )

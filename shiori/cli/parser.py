@@ -74,4 +74,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--no-log", action="store_true",
         help="do not write a per-run log file next to the archive",
     )
+    parser.add_argument(
+        "--extractor-args", action="append", default=None, metavar="IE:ARGS",
+        help='pass ARGS to an extractor, e.g. "youtube:player_client=web_embedded" '
+             "(repeatable; YouTube's gates move, so recipes live in the README)",
+    )
     return parser

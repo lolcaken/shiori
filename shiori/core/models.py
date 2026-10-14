@@ -32,6 +32,7 @@ class Options:
     http_chunk_size: str = "10M"
     force_ipv4: bool = False
     no_log: bool = False
+    extractor_args: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

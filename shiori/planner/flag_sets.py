@@ -68,3 +68,16 @@ def date_flags(since: str | None, until: str | None) -> list[str]:
     if until:
         flags += ["--datebefore", until]
     return flags
+
+
+def extractor_args_flags(entries: tuple[str, ...]) -> list[str]:
+    """Pass raw extractor arguments through to yt-dlp, in order.
+
+    This is the escape hatch for YouTube's moving gates (alternate player
+    clients, po_token, player_skip): shiori validates the IE:ARGS shape
+    and forwards each entry as its own --extractor-args flag.
+    """
+    flags: list[str] = []
+    for entry in entries:
+        flags += ["--extractor-args", entry]
+    return flags

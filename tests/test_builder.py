@@ -95,6 +95,17 @@ def test_full_rebuild_drops_the_archive_flag():
     assert "--download-archive" not in plans[0].argv
 
 
+def test_extractor_args_land_in_argv_before_the_url():
+    plans = build_plans(
+        make_options(extractor_args=("youtube:player_client=web_embedded",)),
+        "Some Channel",
+        Path("/tmp/subs"),
+    )
+    argv = plans[0].argv
+    assert argv[argv.index("--extractor-args") + 1] == "youtube:player_client=web_embedded"
+    assert argv.index("--extractor-args") < argv.index(plans[0].url)
+
+
 def test_channel_name_is_sanitized_for_the_folder():
     plans = build_plans(make_options(), "Some: Channel?", Path("/tmp/subs"))
     assert plans[0].channel_folder == "Some_ Channel_"

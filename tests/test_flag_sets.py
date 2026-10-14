@@ -59,6 +59,20 @@ def test_throttle_flags_force_ipv4_only_when_asked():
     assert "--force-ipv4" in flag_sets.throttle_flags("100K", "10M", force_ipv4=True)
 
 
+def test_extractor_args_pass_each_entry_through_in_order():
+    flags = flag_sets.extractor_args_flags(
+        ("youtube:player_client=web_embedded", "youtube:player_skip=webpage")
+    )
+    assert flags == [
+        "--extractor-args", "youtube:player_client=web_embedded",
+        "--extractor-args", "youtube:player_skip=webpage",
+    ]
+
+
+def test_no_extractor_args_means_no_flags():
+    assert flag_sets.extractor_args_flags(()) == []
+
+
 def test_metadata_flags_embed_metadata_and_cover_art():
     flags = flag_sets.metadata_flags()
     assert "--embed-metadata" in flags

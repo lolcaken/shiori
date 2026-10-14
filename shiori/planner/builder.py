@@ -43,6 +43,7 @@ def build_plans(
             ),
             *flag_sets.filesystem_flags(),
             *flag_sets.date_flags(options.since, options.until),
+            *flag_sets.extractor_args_flags(options.extractor_args),
             *(
                 ["--cookies", str(options.cookies)]
                 if options.cookies is not None

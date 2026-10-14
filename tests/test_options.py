@@ -56,3 +56,21 @@ def test_throttle_options_default_and_override():
 def test_log_file_is_opt_out():
     assert parse(["https://x"]).no_log is False
     assert parse(["https://x", "--no-log"]).no_log is True
+
+
+def test_extractor_args_default_empty_and_repeatable():
+    assert parse(["https://x"]).extractor_args == ()
+    options = parse([
+        "https://x",
+        "--extractor-args", "youtube:player_client=web_embedded",
+        "--extractor-args", "youtube:player_skip=webpage",
+    ])
+    assert options.extractor_args == (
+        "youtube:player_client=web_embedded",
+        "youtube:player_skip=webpage",
+    )
+
+
+def test_extractor_args_must_be_key_colon_args():
+    with pytest.raises(UsageError):
+        parse(["https://x", "--extractor-args", "player_client"])
