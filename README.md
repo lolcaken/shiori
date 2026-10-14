@@ -35,13 +35,35 @@ Shiori is a thin, opinionated wrapper around [yt-dlp](https://github.com/yt-dlp/
 
 ## Install
 
+Requires Python 3.11+, [yt-dlp](https://github.com/yt-dlp/yt-dlp) and [ffmpeg](https://ffmpeg.org/) on your `PATH`. Works on Windows, Linux, and macOS — the code is stdlib-only with no platform-specific dependencies, and CI runs the full suite on Windows + Ubuntu.
+
+From PyPI (simplest):
+
 ```powershell
-git clone https://github.com/<you>/shiori.git
+pip install shiori-archiver
+```
+
+From source:
+
+```powershell
+git clone https://github.com/lolcaken/shiori.git
 cd shiori
 pip install -e .
 ```
 
-That registers the `shiori` command. (`python -m shiori` works too.)
+Linux quick setup (Debian/Ubuntu):
+
+```bash
+sudo apt-get install -y ffmpeg
+pip install shiori-archiver yt-dlp
+```
+
+macOS:
+
+```bash
+brew install ffmpeg
+pip install shiori-archiver yt-dlp
+```
 
 ## Quick start
 
