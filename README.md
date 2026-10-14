@@ -56,6 +56,7 @@ shiori: archiving YouTube (yt-dlp 2026.08.19, ffmpeg version N-125365-g9a01c1cb6
 == shorts ==  https://www.youtube.com/@YouTube/shorts
 [download] 100% of  448.87KiB in 00:00:00 at 926.63KiB/s
 [Merger] Merging formats into ".../2026-10-13 - carrying the pots and pans is a rite of passage @andrewtrs [en].mp4"
+  downloaded 9.5 MiB (1 file)
 Archive run: 1 tab, 1 ok, 0 failed
 ```
 
@@ -84,6 +85,7 @@ Run the same command weekly, monthly, whenever. Videos already in `.shiori-archi
 ```
 == shorts ==  https://www.youtube.com/@SomeChannel/shorts
 [download] Q_BC8ZhiZoU: carrying the pots and pans is a rite of passage @andrewtrs has already been recorded in the archive
+  downloaded 0 B (0 files)
 Archive run: 1 tab, 1 ok, 0 failed
 ```
 
