@@ -41,4 +41,5 @@ def options_from_namespace(ns: argparse.Namespace) -> Options:
         fail_fast=ns.fail_fast,
         channel_name=ns.channel_name,
         sleep_interval=ns.sleep,
+        verbose=ns.verbose,
     )

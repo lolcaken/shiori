@@ -9,6 +9,7 @@ from collections.abc import Callable
 
 from akari.core.models import DownloadPlan, RunSummary, TabOutcome
 from akari.runner.process import run_plan
+from akari.runner.reporting import format_tab_header
 
 
 def run_all(
@@ -18,6 +19,7 @@ def run_all(
 ) -> RunSummary:
     summary = RunSummary()
     for plan in plans:
+        print(format_tab_header(plan), flush=True)
         outcome = runner(plan)
         summary.outcomes.append(outcome)
         if outcome.returncode != 0 and fail_fast:

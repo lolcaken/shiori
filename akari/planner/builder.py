@@ -40,7 +40,6 @@ def build_plans(
             *flag_sets.network_flags(options.jobs, options.sleep_interval),
             *flag_sets.filesystem_flags(),
             *flag_sets.date_flags(options.since, options.until),
-            "--newline",
             *(
                 ["--cookies", str(options.cookies)]
                 if options.cookies is not None

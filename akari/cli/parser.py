@@ -58,4 +58,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--sleep", type=float, default=2.0,
         help="seconds between requests (default: 2.0)",
     )
+    parser.add_argument(
+        "--verbose", action="store_true",
+        help="show raw yt-dlp output instead of organized logging",
+    )
     return parser

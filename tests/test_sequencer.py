@@ -59,3 +59,10 @@ def test_fail_fast_stops_after_the_first_failure():
     runner = stub_runner([1, 0])
     run_all(plans, runner=runner, fail_fast=True)
     assert len(runner.calls) == 1
+
+
+def test_each_tab_is_announced_as_it_starts(capsys):
+    plans = build_plans(make_options(), "Some Channel", Path("/tmp/subs"))
+    run_all(plans, runner=stub_runner([0, 0]), fail_fast=False)
+    out = capsys.readouterr().out
+    assert "videos" in out and "shorts" in out

@@ -3,7 +3,7 @@ from pathlib import Path
 
 from akari.core.models import Options, RunSummary, Tab, TabOutcome
 from akari.planner.builder import build_plans
-from akari.runner.reporting import format_summary
+from akari.runner.reporting import format_summary, format_tab_header
 
 
 def make_options():
@@ -38,3 +38,18 @@ def test_summary_names_each_tab_and_totals():
     assert "shorts" in text
     assert "1 ok" in text
     assert "1 failed" in text
+
+
+def test_tab_header_names_the_tab_and_url():
+    plans = build_plans(make_options(), "Some Channel", Path("/tmp/subs"))
+    header = format_tab_header(plans[0])
+    assert "videos" in header
+    assert plans[0].url in header
+
+
+def test_summary_reports_suppressed_warning_count():
+    plans = build_plans(make_options(), "Some Channel", Path("/tmp/subs"))
+    summary = RunSummary(
+        outcomes=[TabOutcome(plan=plans[0], returncode=0, elapsed=1.0, warnings=2)]
+    )
+    assert "2 warnings" in format_summary(summary)

@@ -28,6 +28,7 @@ class Options:
     fail_fast: bool
     channel_name: str | None
     sleep_interval: float
+    verbose: bool = False
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,8 @@ class TabOutcome:
     plan: DownloadPlan | None
     returncode: int
     elapsed: float
+    errors: int = 0
+    warnings: int = 0
 
 
 @dataclass

@@ -37,3 +37,8 @@ def test_output_becomes_a_path_and_cookies_survive(tmp_path):
 def test_missing_cookies_file_is_rejected_before_any_download():
     with pytest.raises(UsageError):
         parse(["https://x", "--cookies", "no-such-cookies.txt"])
+
+
+def test_verbose_is_opt_in():
+    assert parse(["https://x"]).verbose is False
+    assert parse(["https://x", "--verbose"]).verbose is True

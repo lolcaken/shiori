@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import shlex
 import sys
+from functools import partial
 
 from akari.channel.urls import normalize_channel_url
 from akari.cli.options import options_from_namespace
@@ -10,6 +11,7 @@ from akari.cli.parser import build_parser
 from akari.core.errors import AkariError
 from akari.planner.builder import build_plans
 from akari.runner.preflight import preflight
+from akari.runner.process import run_plan
 from akari.runner.reporting import format_summary
 from akari.runner.resolve import resolve_channel_name
 from akari.runner.scratch import scratch_dir
@@ -41,6 +43,10 @@ def _run(argv: list[str] | None) -> int:
             return 0
         print(f"akari: archiving {channel_name} "
               f"(yt-dlp {tools['yt-dlp']}, {tools['ffmpeg'].splitlines()[0]})")
-        summary = run_all(plans, fail_fast=options.fail_fast)
+        summary = run_all(
+            plans,
+            runner=partial(run_plan, verbose=options.verbose),
+            fail_fast=options.fail_fast,
+        )
         print(format_summary(summary))
         return 0 if summary.all_ok else 1

@@ -1,7 +1,11 @@
 """Render the end-of-run summary for the terminal."""
 from __future__ import annotations
 
-from akari.core.models import RunSummary
+from akari.core.models import DownloadPlan, RunSummary
+
+
+def format_tab_header(plan: DownloadPlan) -> str:
+    return f"== {plan.tab.value} ==  {plan.url}"
 
 
 def format_summary(summary: RunSummary) -> str:
@@ -18,4 +22,9 @@ def format_summary(summary: RunSummary) -> str:
         f"Archive run: {len(summary.outcomes)} tabs, "
         f"{len(summary.succeeded)} ok, {len(summary.failed)} failed"
     )
+    warnings = sum(o.warnings for o in summary.outcomes)
+    if warnings:
+        lines.append(
+            f"  {warnings} warnings suppressed (re-run with --verbose to see them)"
+        )
     return "\n".join(lines)
