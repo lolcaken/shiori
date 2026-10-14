@@ -33,7 +33,7 @@ def build_plans(
             "--yes-playlist",
             *flag_sets.resume_flags(archive_path, options.full),
             *flag_sets.subtitle_flags(options.sub_langs),
-            "--paths", f"subtitle:{subtitle_dir}/",
+            *flag_sets.subtitle_output_flags(subtitle_dir),
             *flag_sets.metadata_flags(),
             *flag_sets.format_flags(),
             "-o", str(tab_dir / filename),

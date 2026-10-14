@@ -23,6 +23,9 @@ def options_from_namespace(ns: argparse.Namespace) -> Options:
         tabs = _TYPE_TO_TABS[ns.type]
     except KeyError:
         raise UsageError(f"unknown type {ns.type!r}") from None
+    cookies = Path(ns.cookies) if ns.cookies else None
+    if cookies is not None and not cookies.is_file():
+        raise UsageError(f"--cookies file does not exist: {cookies}")
     return Options(
         url=ns.url,
         output_dir=Path(ns.output),
@@ -32,7 +35,7 @@ def options_from_namespace(ns: argparse.Namespace) -> Options:
         until=ns.until,
         full=ns.full,
         jobs=ns.jobs,
-        cookies=Path(ns.cookies) if ns.cookies else None,
+        cookies=cookies,
         dry_run=ns.dry_run,
         yt_dlp=ns.yt_dlp,
         fail_fast=ns.fail_fast,

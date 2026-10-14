@@ -26,7 +26,14 @@ def test_zero_jobs_is_rejected():
         parse(["https://x", "-j", "0"])
 
 
-def test_output_becomes_a_path_and_cookies_survive():
-    options = parse(["https://x", "-o", "out", "--cookies", "c.txt"])
+def test_output_becomes_a_path_and_cookies_survive(tmp_path):
+    cookies = tmp_path / "c.txt"
+    cookies.write_text("# Netscape HTTP Cookie File\n")
+    options = parse(["https://x", "-o", "out", "--cookies", str(cookies)])
     assert str(options.output_dir) == "out"
-    assert str(options.cookies) == "c.txt"
+    assert options.cookies == cookies
+
+
+def test_missing_cookies_file_is_rejected_before_any_download():
+    with pytest.raises(UsageError):
+        parse(["https://x", "--cookies", "no-such-cookies.txt"])

@@ -9,6 +9,14 @@ def test_format_flags_request_mp4():
     assert flags == ["-t", "mp4"]
 
 
+def test_subtitle_output_flags_point_at_an_exact_scratch_template():
+    flags = flag_sets.subtitle_output_flags(Path("/tmp/subs"))
+    template = flags[flags.index("-o") + 1]
+    assert template.startswith("subtitle:")
+    assert "/tmp/subs" in template.replace("\\", "/")
+    assert template.endswith("%(title)s.%(ext)s")
+
+
 def test_subtitle_flags_fetch_real_and_auto_subs_and_embed_them():
     flags = flag_sets.subtitle_flags("en.*")
     for expected in ("--write-subs", "--write-auto-subs", "--embed-subs"):

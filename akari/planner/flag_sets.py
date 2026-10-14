@@ -17,6 +17,18 @@ def subtitle_flags(sub_langs: str) -> list[str]:
     ]
 
 
+def subtitle_output_flags(subtitle_dir: Path) -> list[str]:
+    """Point subtitle files at an EXACT template inside the scratch dir.
+
+    A bare ``--paths subtitle:…`` only prepends to the video's ``-o``
+    directory, which leaks .vtt files next to the mp4 when ``-o`` holds
+    an absolute path. An explicit ``-o subtitle:…`` template replaces
+    the location outright, so the archive folder stays mp4-only and the
+    scratch dir (deleted after the run) holds the intermediates.
+    """
+    return ["-o", f"subtitle:{subtitle_dir.as_posix()}/%(title)s.%(ext)s"]
+
+
 def resume_flags(archive_path: Path, full: bool) -> list[str]:
     flags = ["--continue", "--no-overwrites", "--ignore-errors"]
     if not full:

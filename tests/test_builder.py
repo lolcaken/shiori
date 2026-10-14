@@ -54,17 +54,25 @@ def test_argv_embeds_subs_into_mp4_and_points_output_at_the_tab_dir():
     assert "--sub-langs en.*" in argv
     assert "--ignore-config" in argv
     assert plans[0].url in plans[0].argv  # the tab URL is the positional
-    out_index = plans[0].argv.index("-o") + 1
-    assert "[en]" in plans[0].argv[out_index]
-    assert "archives/Some Channel/videos" in plans[0].argv[out_index].replace("\\", "/")
+    video_templates = [
+        plans[0].argv[i + 1] for i, a in enumerate(plans[0].argv[:-1])
+        if a == "-o" and not plans[0].argv[i + 1].startswith("subtitle:")
+    ]
+    assert len(video_templates) == 1
+    assert "[en]" in video_templates[0]
+    assert "archives/Some Channel/videos" in video_templates[0].replace("\\", "/")
 
 
-def test_subtitles_are_routed_to_the_scratch_dir_not_the_archive():
+def test_subtitles_are_routed_to_an_exact_scratch_template():
     plans = build_plans(make_options(), "Some Channel", Path("/tmp/subs"))
     argv = plans[0].argv
-    paths_index = argv.index("--paths") + 1
-    assert argv[paths_index].startswith("subtitle:")
-    assert "/tmp/subs" in argv[paths_index].replace("\\", "/")
+    subtitle_templates = [
+        argv[i + 1] for i, a in enumerate(argv[:-1])
+        if a == "-o" and argv[i + 1].startswith("subtitle:")
+    ]
+    assert len(subtitle_templates) == 1
+    assert "/tmp/subs" in subtitle_templates[0].replace("\\", "/")
+    assert "--paths" not in argv  # --paths prepends; exact template replaces
 
 
 def test_date_range_and_cookies_propagate_into_argv():
