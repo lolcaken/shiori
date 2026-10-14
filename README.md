@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/lolcaken/shiori/master/assets/logos/shiori-1-ytdlp-homage.svg" width="160" alt="Shiori logo: a red badge with a download arrow carrying a play button">
-</p>
-
 <h1 align="center">Shiori</h1>
 
 <p align="center"><i>栞 — "bookmark." Your channel's bookmark.</i></p>
