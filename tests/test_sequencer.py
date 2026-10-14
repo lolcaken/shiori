@@ -66,3 +66,17 @@ def test_each_tab_is_announced_as_it_starts(capsys):
     run_all(plans, runner=stub_runner([0, 0]), fail_fast=False)
     out = capsys.readouterr().out
     assert "videos" in out and "shorts" in out
+
+
+def test_each_tab_reports_bytes_downloaded(capsys, tmp_path):
+    options = make_options(output_dir=tmp_path)
+    plans = build_plans(options, "Some Channel", tmp_path / "subs")
+
+    def runner(plan):
+        plan.tab_dir.mkdir(parents=True, exist_ok=True)
+        (plan.tab_dir / "new.mp4").write_bytes(b"y" * 2048)
+        return TabOutcome(plan=plan, returncode=0, elapsed=0.5)
+
+    run_all([plans[0]], runner=runner, fail_fast=False)
+    out = capsys.readouterr().out
+    assert "downloaded 2.0 KiB (1 file)" in out
