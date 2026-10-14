@@ -119,6 +119,7 @@ usage: shiori [-h] [-o OUTPUT] [-t {videos,shorts,all}]
 | `--http-chunk-size S` | Size of chunked range requests (default: `10M`) |
 | `--ipv4` | Force all connections over IPv4 |
 | `--no-log` | Don't write the per-run log file |
+| `--no-color` | Plain log lines instead of highlighted download progress |
 
 Exit codes: `0` success · `1` a tab failed (the rest still ran) · `2` bad usage · `3` missing yt-dlp/ffmpeg.
 
