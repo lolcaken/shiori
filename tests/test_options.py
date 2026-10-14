@@ -61,3 +61,8 @@ def test_throttle_options_default_and_override():
 def test_log_file_is_opt_out():
     assert parse(["https://x"]).no_log is False
     assert parse(["https://x", "--no-log"]).no_log is True
+
+
+def test_colors_are_opt_out():
+    assert parse(["https://x"]).no_color is False
+    assert parse(["https://x", "--no-color"]).no_color is True

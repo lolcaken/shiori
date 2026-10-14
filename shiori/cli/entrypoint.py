@@ -56,7 +56,9 @@ def _execute(options, tools: dict[str, str], plans, channel_name: str) -> int:
           f"(yt-dlp {tools['yt-dlp']}, {tools['ffmpeg'].splitlines()[0]})")
     summary = run_all(
         plans,
-        runner=partial(run_plan, verbose=options.verbose),
+        runner=partial(
+            run_plan, verbose=options.verbose, no_color=options.no_color
+        ),
         fail_fast=options.fail_fast,
     )
     print(format_summary(summary))

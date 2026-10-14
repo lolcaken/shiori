@@ -18,6 +18,7 @@ import time
 from pathlib import Path
 
 from shiori.core.models import DownloadPlan, TabOutcome
+from shiori.runner.highlight import colorize_progress, enable_vt, use_color
 from shiori.runner.progress import (
     ErrorLine,
     FileStart,
@@ -48,7 +49,7 @@ def _kind_of(filename: str) -> str:
     return "video"
 
 
-def run_plan(plan: DownloadPlan, verbose: bool = False) -> TabOutcome:
+def run_plan(plan: DownloadPlan, verbose: bool = False, no_color: bool = False) -> TabOutcome:
     start = time.monotonic()
     proc = subprocess.Popen(
         plan.argv,
@@ -68,6 +69,9 @@ def run_plan(plan: DownloadPlan, verbose: bool = False) -> TabOutcome:
     video_start = start
     reported: set[str] = set()
     live = sys.stdout.isatty() and not verbose
+    colored = live and use_color(no_color)
+    if colored:
+        enable_vt()
     status_width = 0
 
     def show_status(text: str) -> None:
@@ -133,10 +137,13 @@ def run_plan(plan: DownloadPlan, verbose: bool = False) -> TabOutcome:
                 # line reports a merged video; sidecars need no report.
                 current = None
             else:
-                status = f"  dl {event.describe()} -- {current or ''}".rstrip()
-                if skipped:
-                    status += f" ({skipped} archived)"
-                show_status(status)
+                if colored:
+                    print(colorize_progress(event, current or ""), flush=True)
+                else:
+                    status = f"  dl {event.describe()} -- {current or ''}".rstrip()
+                    if skipped:
+                        status += f" ({skipped} archived)"
+                    show_status(status)
         elif isinstance(event, Skipped):
             skipped += 1
             downloading = current is not None and current_kind in ("video", "part")

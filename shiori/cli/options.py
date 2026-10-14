@@ -46,4 +46,5 @@ def options_from_namespace(ns: argparse.Namespace) -> Options:
         http_chunk_size=ns.http_chunk_size,
         force_ipv4=ns.ipv4,
         no_log=ns.no_log,
+        no_color=ns.no_color,
     )

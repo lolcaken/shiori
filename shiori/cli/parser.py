@@ -78,4 +78,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--no-log", action="store_true",
         help="do not write a per-run log file next to the archive",
     )
+    parser.add_argument(
+        "--no-color", action="store_true",
+        help="plain log lines instead of highlighted download progress",
+    )
     return parser

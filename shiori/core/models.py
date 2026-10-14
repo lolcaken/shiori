@@ -33,6 +33,7 @@ class Options:
     http_chunk_size: str = "10M"
     force_ipv4: bool = False
     no_log: bool = False
+    no_color: bool = False
 
 
 @dataclass(frozen=True)

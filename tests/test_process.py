@@ -109,10 +109,45 @@ def test_live_status_updates_in_place_on_a_tty(monkeypatch):
         "print('[download]  10.0% of  10.00MiB at  5.00MiB/s ETA 00:01')",
         "print('[download] 100% of  10.00MiB in 00:01')",
     ])
-    run_plan(make_plan([sys.executable, "-c", script]))
+    run_plan(make_plan([sys.executable, "-c", script]), no_color=True)
     out = buf.getvalue()
     assert "\r  dl 10% of 10.00MiB" in out  # in-place status, no newline spam
     assert "\r  ok video.mp4" in out  # collapsed done line after clearing status
+
+
+def test_tty_progress_lines_come_back_in_color(monkeypatch):
+    class TtyBuffer(io.StringIO):
+        def isatty(self):
+            return True
+
+    buf = TtyBuffer()
+    monkeypatch.setattr(sys, "stdout", buf)
+    monkeypatch.delenv("NO_COLOR", raising=False)
+    script = "; ".join([
+        "print('[download] Destination: some/video.mp4')",
+        "print('[download]  10.0% of  10.00MiB at  5.00MiB/s ETA 00:01')",
+        "print('[download] 100% of  10.00MiB in 00:01')",
+    ])
+    run_plan(make_plan([sys.executable, "-c", script]))
+    out = buf.getvalue()
+    assert "\x1b[36m10%\x1b[0m" in out  # the spam, highlighted
+    assert "\r  dl " not in out  # no in-place collapsing when colored
+    assert "  ok video.mp4" in out  # done line still printed
+
+
+def test_no_color_flag_restores_plain_collapsing_on_a_tty(monkeypatch):
+    class TtyBuffer(io.StringIO):
+        def isatty(self):
+            return True
+
+    buf = TtyBuffer()
+    monkeypatch.setattr(sys, "stdout", buf)
+    monkeypatch.delenv("NO_COLOR", raising=False)
+    script = "print('[download]  10.0% of  10.00MiB at  5.00MiB/s ETA 00:01')"
+    run_plan(make_plan([sys.executable, "-c", script]), no_color=True)
+    out = buf.getvalue()
+    assert "\x1b[" not in out
+    assert "\r  dl 10%" in out
 
 
 def test_skips_are_counted_not_printed(capsys):
@@ -179,7 +214,7 @@ def test_live_status_carries_the_archived_count_on_a_tty(monkeypatch):
         "print('[download] Destination: some/video.mp4')",
         "print('[download]  10.0% of  10.00MiB at  5.00MiB/s ETA 00:01')",
     ])
-    run_plan(make_plan([sys.executable, "-c", script]))
+    run_plan(make_plan([sys.executable, "-c", script]), no_color=True)
     out = buf.getvalue()
     assert "-- 1 archived" in out
     assert "(1 archived)" in out
