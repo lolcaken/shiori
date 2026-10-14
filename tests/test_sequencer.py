@@ -66,14 +66,3 @@ def test_each_tab_is_announced_as_it_starts(capsys):
     run_all(plans, runner=stub_runner([0, 0]), fail_fast=False)
     out = capsys.readouterr().out
     assert "videos" in out and "shorts" in out
-
-
-def test_tab_archived_total_is_printed_once(capsys):
-    plans = build_plans(make_options(), "Some Channel", Path("/tmp/subs"))
-
-    def runner(plan):
-        return TabOutcome(plan=plan, returncode=0, elapsed=0.5, skipped=3)
-
-    run_all(plans, runner=runner, fail_fast=False)
-    out = capsys.readouterr().out
-    assert out.count("already archived") == 2  # once per tab, not per video

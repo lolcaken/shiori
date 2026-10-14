@@ -59,10 +59,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="seconds between requests (default: 2.0)",
     )
     parser.add_argument(
-        "--verbose", action="store_true",
-        help="show raw yt-dlp output instead of organized logging",
-    )
-    parser.add_argument(
         "--throttled-rate", default="100K",
         help="re-extract when download rate drops below this (default: 100K, 0 disables)",
     )
@@ -77,9 +73,5 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--no-log", action="store_true",
         help="do not write a per-run log file next to the archive",
-    )
-    parser.add_argument(
-        "--no-color", action="store_true",
-        help="plain log lines instead of highlighted download progress",
     )
     return parser

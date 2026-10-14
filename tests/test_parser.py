@@ -15,7 +15,6 @@ def test_defaults_archive_videos_with_english_subs():
     assert ns.http_chunk_size == "10M"
     assert ns.ipv4 is False
     assert ns.no_log is False
-    assert ns.no_color is False
     assert ns.sleep == 2.0
     assert ns.dry_run is False
     assert ns.fail_fast is False
@@ -38,7 +37,6 @@ def test_full_option_set_parses():
         "--http-chunk-size", "5M",
         "--ipv4",
         "--no-log",
-        "--no-color",
         "--dry-run",
         "--yt-dlp", "yt-dlp.exe",
         "--fail-fast",
@@ -52,7 +50,6 @@ def test_full_option_set_parses():
     assert ns.http_chunk_size == "5M"
     assert ns.ipv4 is True
     assert ns.no_log is True
-    assert ns.no_color is True
     assert ns.cookies == "cookies.txt"
     assert ns.channel_name == "Some Channel"
 

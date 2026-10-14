@@ -37,9 +37,7 @@ def resume_flags(archive_path: Path, full: bool) -> list[str]:
 
 
 def network_flags(jobs: int, sleep_interval: float) -> list[str]:
-    # --newline keeps every progress update on its own line so
-    # runner/progress.py can parse the stream (see runner/process.py).
-    return ["-N", str(jobs), "--sleep-interval", str(sleep_interval), "--newline"]
+    return ["-N", str(jobs), "--sleep-interval", str(sleep_interval)]
 
 
 def throttle_flags(throttled_rate: str, http_chunk_size: str, force_ipv4: bool) -> list[str]:

@@ -3,11 +3,7 @@ from pathlib import Path
 
 from shiori.core.models import Options, RunSummary, Tab, TabOutcome
 from shiori.planner.builder import build_plans
-from shiori.runner.reporting import (
-    format_archived_line,
-    format_summary,
-    format_tab_header,
-)
+from shiori.runner.reporting import format_summary, format_tab_header
 
 
 def make_options():
@@ -56,16 +52,3 @@ def test_tab_header_names_the_tab_and_url():
     header = format_tab_header(plans[0])
     assert "videos" in header
     assert plans[0].url in header
-
-
-def test_summary_reports_suppressed_warning_count():
-    plans = build_plans(make_options(), "Some Channel", Path("/tmp/subs"))
-    summary = RunSummary(
-        outcomes=[TabOutcome(plan=plans[0], returncode=0, elapsed=1.0, warnings=2)]
-    )
-    assert "2 warnings" in format_summary(summary)
-
-
-def test_archived_line_reports_a_count_or_nothing():
-    assert format_archived_line(0) == ""
-    assert format_archived_line(487) == "  487 already archived"

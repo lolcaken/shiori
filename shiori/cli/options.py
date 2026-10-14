@@ -41,10 +41,8 @@ def options_from_namespace(ns: argparse.Namespace) -> Options:
         fail_fast=ns.fail_fast,
         channel_name=ns.channel_name,
         sleep_interval=ns.sleep,
-        verbose=ns.verbose,
         throttled_rate=ns.throttled_rate,
         http_chunk_size=ns.http_chunk_size,
         force_ipv4=ns.ipv4,
         no_log=ns.no_log,
-        no_color=ns.no_color,
     )

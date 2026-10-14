@@ -8,11 +8,6 @@ def format_tab_header(plan: DownloadPlan) -> str:
     return f"== {plan.tab.value} ==  {plan.url}"
 
 
-def format_archived_line(skipped: int) -> str:
-    """One collapsed line for a tab's already-archived videos ("" when none)."""
-    return f"  {skipped} already archived" if skipped else ""
-
-
 def format_summary(summary: RunSummary) -> str:
     lines = []
     for outcome in summary.outcomes:
@@ -27,9 +22,4 @@ def format_summary(summary: RunSummary) -> str:
         f"Archive run: {len(summary.outcomes)} {tabs}, "
         f"{len(summary.succeeded)} ok, {len(summary.failed)} failed"
     )
-    warnings = sum(o.warnings for o in summary.outcomes)
-    if warnings:
-        lines.append(
-            f"  {warnings} warnings suppressed (re-run with --verbose to see them)"
-        )
     return "\n".join(lines)

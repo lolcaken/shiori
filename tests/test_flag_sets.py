@@ -38,7 +38,7 @@ def test_resume_flags_skip_the_archive_for_a_full_rebuild():
 
 def test_network_flags_carry_jobs_and_sleep():
     assert flag_sets.network_flags(jobs=8, sleep_interval=2.0) == [
-        "-N", "8", "--sleep-interval", "2.0", "--newline",
+        "-N", "8", "--sleep-interval", "2.0",
     ]
 
 

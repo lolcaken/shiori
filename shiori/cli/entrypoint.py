@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import shlex
 import sys
-from functools import partial
 
 from shiori.channel.urls import normalize_channel_url
 from shiori.cli.options import options_from_namespace
@@ -12,7 +11,6 @@ from shiori.core.errors import ShioriError
 from shiori.planner.builder import build_plans
 from shiori.runner.logfile import log_session
 from shiori.runner.preflight import preflight
-from shiori.runner.process import run_plan
 from shiori.runner.reporting import format_summary
 from shiori.runner.resolve import resolve_channel_name
 from shiori.runner.scratch import scratch_dir
@@ -54,12 +52,6 @@ def _run(argv: list[str] | None) -> int:
 def _execute(options, tools: dict[str, str], plans, channel_name: str) -> int:
     print(f"shiori: archiving {channel_name} "
           f"(yt-dlp {tools['yt-dlp']}, {tools['ffmpeg'].splitlines()[0]})")
-    summary = run_all(
-        plans,
-        runner=partial(
-            run_plan, verbose=options.verbose, no_color=options.no_color
-        ),
-        fail_fast=options.fail_fast,
-    )
+    summary = run_all(plans, fail_fast=options.fail_fast)
     print(format_summary(summary))
     return 0 if summary.all_ok else 1
