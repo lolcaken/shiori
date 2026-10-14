@@ -91,6 +91,21 @@ Archive run: 1 tab, 1 ok, 0 failed
 
 `--full` ignores the archive file and rebuilds everything from scratch.
 
+## Bot checks ("Please sign in" with no cookies)
+
+Some videos answer every default request with `ERROR: … Please sign in` — that's YouTube's bot-check wall (IP-reputation based), not a broken video. Tested October 2026 against a gated short: the `default`, `android`, `ios`, `mweb`, `tv` and `web_safari` clients all hit the wall, while **`web_embedded` sailed through** with identical quality (720p h264 + AAC — the same `136+140` pick the defaults make):
+
+```powershell
+shiori "https://www.youtube.com/@SomeChannel" --type all `
+  --extractor-args "youtube:player_client=web_embedded"
+```
+
+Notes, honestly stated:
+
+- `--extractor-args` is a generic passthrough (repeatable) precisely because these gates move — today's recipe may need adjusting tomorrow, and that shouldn't require a shiori release.
+- If *every* client fails on a video, your IP is hard-flagged: change networks, slow down, or accept cookies for those items. Static hardcoded PO tokens don't work anymore (YouTube binds them per video); the heavy alternative is the bgutil PO-token server plus its yt-dlp plugin.
+- Cookies remain the reliable fix whenever they're an option.
+
 ## Options
 
 ```
@@ -120,6 +135,7 @@ usage: shiori [-h] [-o OUTPUT] [-t {videos,shorts,all}]
 | `--throttled-rate R` | Re-extract when a download crawls below this (default: `100K`, `0` disables) |
 | `--http-chunk-size S` | Size of chunked range requests (default: `10M`) |
 | `--ipv4` | Force all connections over IPv4 |
+| `--extractor-args IE:ARGS` | Pass raw args to an extractor (repeatable; see Bot checks) |
 | `--no-log` | Don't write the per-run log file |
 
 Exit codes: `0` success · `1` a tab failed (the rest still ran) · `2` bad usage · `3` missing yt-dlp/ffmpeg.
